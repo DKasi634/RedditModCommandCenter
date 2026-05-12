@@ -89,6 +89,10 @@ h3 {
   gap: 8px;
 }
 
+.tight {
+  gap: 6px;
+}
+
 .summary-strip span,
 .report-row span {
   border: 1px solid #dce2e7;
@@ -186,6 +190,120 @@ h3 {
 .panel {
   padding: 16px;
   border-radius: 8px;
+}
+
+.panel-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.panel-heading h2 {
+  margin-bottom: 0;
+}
+
+.ai-signal-panel {
+  display: grid;
+  align-content: start;
+  gap: 12px;
+}
+
+.ai-signal-panel h3,
+.ai-signal-panel p,
+.ai-signal-panel ul {
+  margin-bottom: 0;
+}
+
+.ai-signal-summary {
+  display: grid;
+  grid-template-columns: minmax(160px, 1.15fr) minmax(120px, 0.85fr) minmax(150px, 1fr);
+  gap: 8px;
+}
+
+.ai-signal-summary > div {
+  display: grid;
+  align-content: start;
+  gap: 5px;
+  min-height: 78px;
+  padding: 10px;
+  border-radius: 8px;
+  background: #f5f7f8;
+}
+
+.ai-signal-summary strong {
+  line-height: 1.2;
+}
+
+.ai-summary-text {
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+.confidence-meter {
+  display: block;
+  height: 8px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #dce2e7;
+}
+
+.confidence-meter span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: #203040;
+}
+
+.model-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border: 1px solid #dce2e7;
+  border-radius: 999px;
+  padding: 4px 8px;
+  color: #46535f;
+  background: #f8fafb;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+
+.rule-match-list,
+.reasoning-list {
+  padding-left: 18px;
+}
+
+.rule-match-list {
+  display: grid;
+  gap: 7px;
+  list-style: none;
+  padding-left: 0;
+}
+
+.rule-match-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  border: 1px solid #dce2e7;
+  border-radius: 8px;
+  padding: 8px 10px;
+  background: #f8fafb;
+}
+
+.reasoning-list {
+  display: grid;
+  gap: 7px;
+  line-height: 1.35;
+}
+
+.model-footnote {
+  border-top: 1px solid #edf1f4;
+  padding-top: 10px;
+  font-size: 13px;
 }
 
 .decision-panel {
@@ -365,6 +483,10 @@ button.compact {
   }
 
   .panel-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ai-signal-summary {
     grid-template-columns: 1fr;
   }
 }
