@@ -1,5 +1,5 @@
 import { AlertTriangle, Brain, Sparkles } from "lucide-react";
-import type { ClassificationResult } from "../../shared/domain";
+import type { ClassificationResult, ClassificationState } from "../../shared/domain";
 import { formatRiskLevel } from "../utils/format-risk-level";
 import { RiskBadge } from "./status-badge";
 
@@ -10,21 +10,69 @@ const actionLabels: Record<ClassificationResult["suggestedAction"], string> = {
   needs_second_opinion: "Needs second opinion",
 };
 
+function analysisMetadata(classification: ClassificationResult, state: ClassificationState) {
+  if (state === "fallback") {
+    return "Fallback analysis shown";
+  }
+
+  const createdAt = new Date(classification.createdAt).getTime();
+  const elapsedSeconds = Number.isFinite(createdAt) ? Math.max(0, Math.floor((Date.now() - createdAt) / 1000)) : 0;
+
+  if (elapsedSeconds < 60) {
+    return "Analyzed just now";
+  }
+
+  const elapsedMinutes = Math.floor(elapsedSeconds / 60);
+  if (elapsedMinutes < 60) {
+    return `Last analyzed ${elapsedMinutes}m ago`;
+  }
+
+  const elapsedHours = Math.floor(elapsedMinutes / 60);
+  if (elapsedHours < 24) {
+    return `Last analyzed ${elapsedHours}h ago`;
+  }
+
+  return `Last analyzed ${Math.floor(elapsedHours / 24)}d ago`;
+}
+
 export function AiSignalPanel({
   classification,
+  state,
+  showSummaryByDefault,
 }: {
   classification?: ClassificationResult | undefined;
+  state: ClassificationState;
+  showSummaryByDefault: boolean;
 }) {
+  if (state === "disabled") {
+    return (
+      <section className="panel">
+        <h2><Brain size={18} /> AI signal</h2>
+        <p className="muted">AI analysis is disabled for this workspace.</p>
+      </section>
+    );
+  }
+
+  if (state === "analyzing") {
+    return (
+      <section className="panel">
+        <h2><Brain size={18} /> AI signal</h2>
+        <p className="muted">Analyzing this item...</p>
+      </section>
+    );
+  }
+
   if (!classification) {
     return (
       <section className="panel">
         <h2><Brain size={18} /> AI signal</h2>
-        <p className="muted">No cached classification yet. Moderators can still review manually.</p>
+        <p className="muted">Not analyzed yet. Moderators can review manually or run AI analysis.</p>
       </section>
     );
   }
 
   const confidencePercent = Math.round(classification.confidence * 100);
+  const metadata = analysisMetadata(classification, state);
 
   return (
     <section className="panel ai-signal-panel">
@@ -34,6 +82,7 @@ export function AiSignalPanel({
           <Sparkles size={14} /> {classification.modelProvider}
         </span>
       </div>
+      <p className="muted analysis-metadata">{metadata}</p>
       <div className="ai-signal-summary">
         <div>
           <span className="muted">Recommendation</span>
@@ -71,12 +120,14 @@ export function AiSignalPanel({
       ) : (
         <p className="muted">No direct subreddit rule match.</p>
       )}
-      <h3>Reasoning for mods</h3>
-      <ul className="reasoning-list">
-        {classification.reasoningForMods.map((reason) => (
-          <li key={reason}>{reason}</li>
-        ))}
-      </ul>
+      <details className="ai-details" open={showSummaryByDefault}>
+        <summary>Reasoning for mods</summary>
+        <ul className="reasoning-list">
+          {classification.reasoningForMods.map((reason) => (
+            <li key={reason}>{reason}</li>
+          ))}
+        </ul>
+      </details>
       <p className="muted model-footnote">
         {classification.modelVersion} / {classification.promptVersion}
       </p>

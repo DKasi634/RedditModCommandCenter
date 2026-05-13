@@ -140,6 +140,26 @@ h3 {
   cursor: pointer;
 }
 
+.queue-controls {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  padding: 10px 14px;
+  border-bottom: 1px solid #dce2e7;
+  background: #ffffff;
+}
+
+.queue-controls label {
+  margin-bottom: 0;
+  color: #46535f;
+  font-size: 12px;
+}
+
+.queue-controls select {
+  min-height: 34px;
+  padding: 6px 8px;
+}
+
 .queue-card.selected,
 .queue-card:hover {
   background: #ffffff;
@@ -212,8 +232,13 @@ h3 {
 
 .ai-signal-panel h3,
 .ai-signal-panel p,
-.ai-signal-panel ul {
+.ai-signal-panel ul,
+.ai-signal-panel details {
   margin-bottom: 0;
+}
+
+.analysis-metadata {
+  font-size: 13px;
 }
 
 .ai-signal-summary {
@@ -295,9 +320,21 @@ h3 {
 }
 
 .reasoning-list {
+  margin-top: 8px;
   display: grid;
   gap: 7px;
   line-height: 1.35;
+}
+
+.ai-details {
+  border-top: 1px solid #edf1f4;
+  padding-top: 10px;
+}
+
+.ai-details summary {
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 700;
 }
 
 .model-footnote {
@@ -349,7 +386,7 @@ h3 {
 
 .metric-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 8px;
 }
 

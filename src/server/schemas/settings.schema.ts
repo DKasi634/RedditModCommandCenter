@@ -5,6 +5,7 @@ export const settingsSchema = z.object({
   classificationMode: z.enum(["manual", "auto_on_load"]),
   secondOpinionThreshold: z.number().min(0).max(100),
   collapseLowRiskItems: z.boolean(),
+  showResolvedByDefault: z.boolean(),
   showAiSummaryByDefault: z.boolean(),
   customSensitiveKeywords: z.array(z.string())
 });

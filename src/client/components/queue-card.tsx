@@ -10,6 +10,12 @@ type Props = {
 };
 
 export function QueueCard({ item, isSelected, onSelect, isDisabled = false }: Props) {
+  const aiLabel = item.classification
+    ? `${Math.round(item.classification.confidence * 100)}%`
+    : item.classificationState === "disabled"
+      ? "Off"
+      : "Not analyzed";
+
   return (
     <button
       className={`queue-card ${isSelected ? "selected" : ""}`}
@@ -28,7 +34,7 @@ export function QueueCard({ item, isSelected, onSelect, isDisabled = false }: Pr
           <MessageSquareWarning size={14} /> {item.triageScore}
         </span>
         <span title="AI confidence">
-          <Brain size={14} /> {Math.round((item.classification?.confidence ?? 0) * 100)}%
+          <Brain size={14} /> {aiLabel}
         </span>
       </div>
       <ChevronRight className="queue-card-arrow" size={18} />

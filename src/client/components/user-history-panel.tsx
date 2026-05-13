@@ -18,9 +18,13 @@ export function UserHistoryPanel({ history }: { history: UserHistory }) {
       <h2><History size={18} /> User history</h2>
       <div className="metric-grid">
         <div><strong>{history.previousWarnings}</strong><span>Warnings</span></div>
+        <div><strong>{history.previousApprovals ?? 0}</strong><span>Approvals</span></div>
         <div><strong>{history.previousRemovals}</strong><span>Removals</span></div>
         <div><strong>{history.previousSecondOpinions}</strong><span>Escalations</span></div>
       </div>
+      {history.repeatedRuleTags.length > 0 ? (
+        <p className="muted">Repeated matches: {history.repeatedRuleTags.join(", ")}</p>
+      ) : null}
       <p className="muted">{lastAction}</p>
     </section>
   );

@@ -1,32 +1,64 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { classifyItem } from "../api/classification-api";
 import { recordDecision } from "../api/decision-api";
 import { updateStatus } from "../api/queue-api";
 import { AiSignalPanel } from "../components/ai-signal-panel";
 import { DecisionPanel } from "../components/decision-panel";
-import { QueueList } from "../components/queue-list";
+import { type QueueFilterMode, QueueList } from "../components/queue-list";
 import { UserHistoryPanel } from "../components/user-history-panel";
 import { useQueueItems } from "../hooks/use-queue-items";
+import type { QueueSortMode } from "../utils/sort-queue-items";
 import type { ModeratorDecision, WorkflowStatus } from "../../shared/domain";
 
 export function CommandCenterScreen() {
   const { data, error, isLoading, refresh } = useQueueItems();
   const [selectedThingId, setSelectedThingId] = useState<string | undefined>();
-  const [showResolved, setShowResolved] = useState(false);
+  const [showResolved, setShowResolved] = useState<boolean | undefined>();
+  const [filterMode, setFilterMode] = useState<QueueFilterMode>("active");
+  const [sortMode, setSortMode] = useState<QueueSortMode>("priority");
   const [actionError, setActionError] = useState<string | null>(null);
   const [isActionRunning, setIsActionRunning] = useState(false);
+  const [analyzingThingId, setAnalyzingThingId] = useState<string | null>(null);
   const isBusy = isLoading || isActionRunning;
+  const resolvedVisible = showResolved ?? data?.settings.showResolvedByDefault ?? false;
   const activeItems = useMemo(
     () => data?.items.filter((item) => item.status !== "resolved") ?? [],
     [data?.items],
   );
   const resolvedCount = (data?.items.length ?? 0) - activeItems.length;
-  const visibleItems = showResolved ? (data?.items ?? []) : activeItems;
+  const visibleItems = useMemo(() => {
+    const items = data?.items ?? [];
+
+    if (filterMode === "all") {
+      return items;
+    }
+
+    if (filterMode === "resolved") {
+      return items.filter((item) => item.status === "resolved");
+    }
+
+    if (filterMode === "escalated") {
+      return items.filter((item) => item.status === "needs_second_opinion");
+    }
+
+    if (filterMode === "high_risk") {
+      return items.filter((item) => item.classification?.riskLevel === "high" && item.status !== "resolved");
+    }
+
+    return resolvedVisible ? items : activeItems;
+  }, [activeItems, data?.items, filterMode, resolvedVisible]);
 
   const selected = useMemo(() => {
     if (!visibleItems.length) return undefined;
     return visibleItems.find((item) => item.thingId === selectedThingId) ?? visibleItems[0];
   }, [selectedThingId, visibleItems]);
+
+  useEffect(() => {
+    if (showResolved === undefined && data) {
+      setShowResolved(data.settings.showResolvedByDefault);
+      setFilterMode(data.settings.showResolvedByDefault ? "all" : "active");
+    }
+  }, [data, showResolved]);
 
   async function withRefresh(action: () => Promise<unknown>) {
     setIsActionRunning(true);
@@ -39,6 +71,12 @@ export function CommandCenterScreen() {
     } finally {
       setIsActionRunning(false);
     }
+  }
+
+  async function analyzeSelected(thingId: string) {
+    setAnalyzingThingId(thingId);
+    await withRefresh(() => classifyItem(thingId));
+    setAnalyzingThingId(null);
   }
 
   return (
@@ -63,17 +101,25 @@ export function CommandCenterScreen() {
         <section className="empty-state">
           <div>
             <p className="eyebrow">Live queue ready</p>
-            <h2>{showResolved ? "No queue items right now" : "No active queue items right now"}</h2>
+            <h2>{resolvedVisible ? "No queue items right now" : "No active queue items right now"}</h2>
             <p className="muted">
-              {resolvedCount > 0 && !showResolved
+              {resolvedCount > 0 && !resolvedVisible
                 ? "Resolved items are hidden from the active queue."
                 : "Report or filter a test post/comment in this subreddit, then refresh this workspace."}
             </p>
           </div>
           <div className="button-row">
             {resolvedCount > 0 ? (
-              <button className="secondary" disabled={isBusy} onClick={() => setShowResolved((value) => !value)}>
-                {showResolved ? "Hide resolved" : "Show resolved"}
+              <button
+                className="secondary"
+                disabled={isBusy}
+                onClick={() => {
+                  const next = !resolvedVisible;
+                  setShowResolved(next);
+                  setFilterMode(next ? "all" : "active");
+                }}
+              >
+                {resolvedVisible ? "Hide resolved" : "Show resolved"}
               </button>
             ) : null}
             <button disabled={isBusy} onClick={() => void refresh()}>Refresh queue</button>
@@ -88,9 +134,20 @@ export function CommandCenterScreen() {
             selectedThingId={selected.thingId}
             onSelect={setSelectedThingId}
             isDisabled={isBusy}
-            showResolved={showResolved}
+            showResolved={resolvedVisible}
             resolvedCount={resolvedCount}
-            onToggleResolved={() => setShowResolved((value) => !value)}
+            onToggleResolved={() => {
+              const next = !resolvedVisible;
+              setShowResolved(next);
+              setFilterMode(next ? "all" : "active");
+            }}
+            filterMode={filterMode}
+            sortMode={sortMode}
+            onFilterModeChange={(mode) => {
+              setFilterMode(mode);
+              setShowResolved(mode === "all" || mode === "resolved");
+            }}
+            onSortModeChange={setSortMode}
           />
           <section className="detail">
             <article className="item-detail">
@@ -102,12 +159,18 @@ export function CommandCenterScreen() {
               </div>
             </article>
             <div className="panel-grid">
-              <AiSignalPanel classification={selected.classification} />
+              <AiSignalPanel
+                classification={selected.classification}
+                state={analyzingThingId === selected.thingId ? "analyzing" : selected.classificationState}
+                showSummaryByDefault={data.settings.showAiSummaryByDefault}
+              />
               <UserHistoryPanel history={selected.userHistory} />
               <DecisionPanel
                 item={selected}
                 isDisabled={isBusy}
-                onClassify={() => withRefresh(() => classifyItem(selected.thingId))}
+                isAnalyzing={analyzingThingId === selected.thingId}
+                aiEnabled={data.settings.aiEnabled}
+                onClassify={() => analyzeSelected(selected.thingId)}
                 onStatusChange={(status: WorkflowStatus) => withRefresh(() => updateStatus({ thingId: selected.thingId, status }))}
                 onDecision={(decision: Omit<ModeratorDecision, "decidedAt" | "moderatorUsername">) =>
                   withRefresh(() => recordDecision({ decision }))

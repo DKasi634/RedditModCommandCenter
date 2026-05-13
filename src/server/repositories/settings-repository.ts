@@ -5,7 +5,10 @@ import { parseJson, stringifyJson } from "../utils/json-store";
 import { redisKeys } from "../utils/redis-keys";
 
 export async function getSettings() {
-  return parseJson<SubredditSettings>(await redis.get(redisKeys.settings), DEFAULT_SETTINGS);
+  return {
+    ...DEFAULT_SETTINGS,
+    ...parseJson<Partial<SubredditSettings>>(await redis.get(redisKeys.settings), {}),
+  };
 }
 
 export async function saveSettings(settings: SubredditSettings) {

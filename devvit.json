@@ -25,41 +25,6 @@
         "forUserType": "moderator",
         "location": "subreddit",
         "endpoint": "/internal/menu/open-command-center"
-      },
-      {
-        "label": "MCC Diagnostic: Reddit Read",
-        "description": "Check migrated app Reddit API read access.",
-        "forUserType": "moderator",
-        "location": "subreddit",
-        "endpoint": "/internal/menu/diagnostics/reddit-read"
-      },
-      {
-        "label": "MCC Diagnostic: Redis",
-        "description": "Check migrated app Redis read and write access.",
-        "forUserType": "moderator",
-        "location": "subreddit",
-        "endpoint": "/internal/menu/diagnostics/redis"
-      },
-      {
-        "label": "MCC Diagnostic: Rules",
-        "description": "Check migrated app subreddit rule fetching.",
-        "forUserType": "moderator",
-        "location": "subreddit",
-        "endpoint": "/internal/menu/diagnostics/rules"
-      },
-      {
-        "label": "MCC Diagnostic: Queue",
-        "description": "Check migrated app mod queue fetching.",
-        "forUserType": "moderator",
-        "location": "subreddit",
-        "endpoint": "/internal/menu/diagnostics/queue"
-      },
-      {
-        "label": "MCC Diagnostic: Gemini",
-        "description": "Check Gemini AI provider access.",
-        "forUserType": "moderator",
-        "location": "subreddit",
-        "endpoint": "/internal/menu/diagnostics/gemini"
       }
     ]
   },

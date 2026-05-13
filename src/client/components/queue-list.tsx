@@ -1,6 +1,8 @@
 import type { QueueViewItem } from "../../shared/domain";
-import { sortQueueItems } from "../utils/sort-queue-items";
+import { type QueueSortMode, sortQueueItems } from "../utils/sort-queue-items";
 import { QueueCard } from "./queue-card";
+
+export type QueueFilterMode = "active" | "all" | "resolved" | "escalated" | "high_risk";
 
 type Props = {
   items: QueueViewItem[];
@@ -10,6 +12,10 @@ type Props = {
   showResolved?: boolean;
   resolvedCount?: number;
   onToggleResolved?: () => void;
+  filterMode: QueueFilterMode;
+  sortMode: QueueSortMode;
+  onFilterModeChange: (mode: QueueFilterMode) => void;
+  onSortModeChange: (mode: QueueSortMode) => void;
 };
 
 export function QueueList({
@@ -20,6 +26,10 @@ export function QueueList({
   showResolved = false,
   resolvedCount = 0,
   onToggleResolved,
+  filterMode,
+  sortMode,
+  onFilterModeChange,
+  onSortModeChange,
 }: Props) {
   return (
     <aside className="queue-list">
@@ -31,7 +41,35 @@ export function QueueList({
           </button>
         ) : null}
       </div>
-      {sortQueueItems(items).map((item) => (
+      <div className="queue-controls">
+        <label>
+          Filter
+          <select
+            value={filterMode}
+            disabled={isDisabled}
+            onChange={(event) => onFilterModeChange(event.target.value as QueueFilterMode)}
+          >
+            <option value="active">Active</option>
+            <option value="all">All</option>
+            <option value="resolved">Resolved</option>
+            <option value="escalated">Escalated</option>
+            <option value="high_risk">High risk</option>
+          </select>
+        </label>
+        <label>
+          Sort
+          <select
+            value={sortMode}
+            disabled={isDisabled}
+            onChange={(event) => onSortModeChange(event.target.value as QueueSortMode)}
+          >
+            <option value="priority">Priority</option>
+            <option value="reports">Reports</option>
+            <option value="newest">Newest</option>
+          </select>
+        </label>
+      </div>
+      {sortQueueItems(items, sortMode).map((item) => (
         <QueueCard
           key={item.thingId}
           item={item}

@@ -15,6 +15,8 @@ const statuses: WorkflowStatus[] = [
 type Props = {
   item: QueueViewItem;
   isDisabled?: boolean;
+  isAnalyzing?: boolean;
+  aiEnabled?: boolean;
   onStatusChange: (status: WorkflowStatus) => Promise<void>;
   onClassify: () => Promise<void>;
   onDecision: (decision: Omit<ModeratorDecision, "decidedAt" | "moderatorUsername">) => Promise<void>;
@@ -22,11 +24,20 @@ type Props = {
 
 type AiFeedback = NonNullable<ModeratorDecision["aiFeedback"]>;
 
-export function DecisionPanel({ item, isDisabled = false, onStatusChange, onClassify, onDecision }: Props) {
+export function DecisionPanel({
+  item,
+  isDisabled = false,
+  isAnalyzing = false,
+  aiEnabled = true,
+  onStatusChange,
+  onClassify,
+  onDecision,
+}: Props) {
   const [note, setNote] = useState("");
   const [aiFeedback, setAiFeedback] = useState<AiFeedback>("correct");
   const [isSaving, setIsSaving] = useState(false);
   const isBusy = isDisabled || isSaving;
+  const analyzeLabel = item.classification ? "Reanalyze with AI" : "Analyze with AI";
 
   async function saveDecision(finalAction: ModeratorDecision["finalAction"]) {
     setIsSaving(true);
@@ -38,6 +49,10 @@ export function DecisionPanel({ item, isDisabled = false, onStatusChange, onClas
         note,
         aiFeedback,
       };
+
+      if (item.classification) {
+        decision.aiSnapshot = item.classification;
+      }
 
       if (matchedRule) {
         decision.selectedRuleId = matchedRule.ruleId;
@@ -66,9 +81,10 @@ export function DecisionPanel({ item, isDisabled = false, onStatusChange, onClas
           ))}
         </select>
       </label>
-      <button className="secondary" disabled={isBusy} onClick={() => void onClassify()}>
-        <RefreshCcw size={16} /> Analyze with AI
+      <button className="secondary" disabled={isBusy || !aiEnabled} onClick={() => void onClassify()}>
+        <RefreshCcw size={16} /> {isAnalyzing ? "Analyzing..." : analyzeLabel}
       </button>
+      {!aiEnabled ? <p className="muted action-status">AI analysis is disabled in settings.</p> : null}
       <label>
         AI feedback
         <select

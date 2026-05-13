@@ -10,6 +10,14 @@ export type WorkflowStatus =
   | "resolved"
   | "ignored_ai_suggestion";
 
+export type ClassificationState =
+  | "not_analyzed"
+  | "analyzing"
+  | "available"
+  | "failed"
+  | "disabled"
+  | "fallback";
+
 export type QueueItem = {
   thingId: string;
   itemType: ItemType;
@@ -32,6 +40,7 @@ export type SubredditRule = {
 export type UserHistory = {
   username: string;
   previousWarnings: number;
+  previousApprovals: number;
   previousRemovals: number;
   previousSecondOpinions: number;
   repeatedRuleTags: string[];
@@ -86,6 +95,7 @@ export type ModeratorDecision = {
   moderatorUsername: string;
   note?: string;
   aiFeedback?: "correct" | "partially_correct" | "wrong" | "unclear" | "not_useful" | "missed_context";
+  aiSnapshot?: ClassificationResult;
   decidedAt: string;
 };
 
@@ -94,12 +104,14 @@ export type SubredditSettings = {
   classificationMode: "manual" | "auto_on_load";
   secondOpinionThreshold: number;
   collapseLowRiskItems: boolean;
+  showResolvedByDefault: boolean;
   showAiSummaryByDefault: boolean;
   customSensitiveKeywords: string[];
 };
 
 export type QueueViewItem = QueueItem & {
   classification?: ClassificationResult;
+  classificationState: ClassificationState;
   status: WorkflowStatus;
   triageScore: number;
   userHistory: UserHistory;

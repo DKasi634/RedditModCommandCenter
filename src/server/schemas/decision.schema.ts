@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { classificationResultSchema } from "./classification.schema";
 
 export const statusRequestSchema = z.object({
   thingId: z.string().min(1),
@@ -28,6 +29,7 @@ export const decisionRequestSchema = z.object({
       "unclear",
       "not_useful",
       "missed_context"
-    ]).optional()
+    ]).optional(),
+    aiSnapshot: classificationResultSchema.optional()
   })
 });

@@ -5,6 +5,7 @@ export const DEFAULT_SETTINGS: SubredditSettings = {
   classificationMode: "manual",
   secondOpinionThreshold: 75,
   collapseLowRiskItems: false,
+  showResolvedByDefault: false,
   showAiSummaryByDefault: true,
   customSensitiveKeywords: []
 };

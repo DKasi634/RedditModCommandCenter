@@ -107,6 +107,7 @@ async function buildClassificationInput(item: QueueItem, history: UserHistory): 
   const subredditRules = await fetchSubredditRules(item.subredditName);
   const priorAppHistory: ClassificationInput["priorAppHistory"] = {
     previousWarnings: history.previousWarnings,
+    previousApprovals: history.previousApprovals ?? 0,
     previousRemovals: history.previousRemovals,
     previousSecondOpinions: history.previousSecondOpinions,
     repeatedRuleTags: history.repeatedRuleTags,
@@ -282,6 +283,7 @@ export async function testGeminiProvider(): Promise<ClassificationResult> {
   const demoHistory: UserHistory = {
     username: "diagnostic-user",
     previousWarnings: 0,
+    previousApprovals: 0,
     previousRemovals: 0,
     previousSecondOpinions: 0,
     repeatedRuleTags: [],
