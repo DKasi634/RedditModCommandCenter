@@ -1,6 +1,9 @@
 import { Check, Flag, RefreshCcw, ShieldAlert, X } from "lucide-react";
 import { useState } from "react";
 import type { ModeratorDecision, QueueViewItem, WorkflowStatus } from "../../shared/domain";
+import { UiSelect } from "./ui-select";
+
+type AiFeedback = NonNullable<ModeratorDecision["aiFeedback"]>;
 
 const statuses: WorkflowStatus[] = [
   "needs_review",
@@ -10,6 +13,20 @@ const statuses: WorkflowStatus[] = [
   "likely_remove",
   "resolved",
   "ignored_ai_suggestion"
+];
+
+const statusOptions = statuses.map((status) => ({
+  label: status.replaceAll("_", " "),
+  value: status,
+}));
+
+const aiFeedbackOptions: Array<{ label: string; value: AiFeedback }> = [
+  { label: "Correct", value: "correct" },
+  { label: "Partially correct", value: "partially_correct" },
+  { label: "Wrong", value: "wrong" },
+  { label: "Unclear", value: "unclear" },
+  { label: "Not useful", value: "not_useful" },
+  { label: "Missed important context", value: "missed_context" },
 ];
 
 type Props = {
@@ -22,8 +39,6 @@ type Props = {
   onClassify: () => Promise<void>;
   onDecision: (decision: Omit<ModeratorDecision, "decidedAt" | "moderatorUsername">) => Promise<void>;
 };
-
-type AiFeedback = NonNullable<ModeratorDecision["aiFeedback"]>;
 
 export function DecisionPanel({
   item,
@@ -74,36 +89,28 @@ export function DecisionPanel({
       <div className="decision-grid">
         <label>
           Workflow status
-          <select
+          <UiSelect
             value={item.status}
             disabled={isBusy}
-            onChange={(event) => void onStatusChange(event.target.value as WorkflowStatus)}
-          >
-            {statuses.map((status) => (
-              <option key={status} value={status}>{status.replaceAll("_", " ")}</option>
-            ))}
-          </select>
+            options={statusOptions}
+            onChange={(status) => void onStatusChange(status)}
+          />
         </label>
         <div className="decision-ai-action">
           <span className="field-label">AI analysis</span>
           <button className="secondary" disabled={isBusy || !aiEnabled} onClick={() => void onClassify()}>
-            <RefreshCcw size={16} /> {isAnalyzing ? "Analyzing..." : analyzeLabel}
+            <RefreshCcw className={isAnalyzing ? "spin-icon" : undefined} size={16} />
+            {isAnalyzing ? "Analyzing..." : analyzeLabel}
           </button>
         </div>
         <label>
           AI feedback
-          <select
+          <UiSelect
             value={aiFeedback}
             disabled={isBusy}
-            onChange={(event) => setAiFeedback(event.target.value as AiFeedback)}
-          >
-            <option value="correct">Correct</option>
-            <option value="partially_correct">Partially correct</option>
-            <option value="wrong">Wrong</option>
-            <option value="unclear">Unclear</option>
-            <option value="not_useful">Not useful</option>
-            <option value="missed_context">Missed important context</option>
-          </select>
+            options={aiFeedbackOptions}
+            onChange={setAiFeedback}
+          />
         </label>
         <label className="note-field">
           Moderator note

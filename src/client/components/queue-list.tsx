@@ -1,8 +1,23 @@
 import type { QueueViewItem } from "../../shared/domain";
 import { type QueueSortMode, sortQueueItems } from "../utils/sort-queue-items";
 import { QueueCard } from "./queue-card";
+import { UiSelect } from "./ui-select";
 
 export type QueueFilterMode = "active" | "all" | "resolved" | "escalated" | "high_risk";
+
+const filterOptions: Array<{ label: string; value: QueueFilterMode }> = [
+  { label: "Active", value: "active" },
+  { label: "All", value: "all" },
+  { label: "Resolved", value: "resolved" },
+  { label: "Escalated", value: "escalated" },
+  { label: "High risk", value: "high_risk" },
+];
+
+const sortOptions: Array<{ label: string; value: QueueSortMode }> = [
+  { label: "Priority", value: "priority" },
+  { label: "Reports", value: "reports" },
+  { label: "Newest", value: "newest" },
+];
 
 type Props = {
   items: QueueViewItem[];
@@ -44,29 +59,21 @@ export function QueueList({
       <div className="queue-controls">
         <label>
           Filter
-          <select
+          <UiSelect
             value={filterMode}
             disabled={isDisabled}
-            onChange={(event) => onFilterModeChange(event.target.value as QueueFilterMode)}
-          >
-            <option value="active">Active</option>
-            <option value="all">All</option>
-            <option value="resolved">Resolved</option>
-            <option value="escalated">Escalated</option>
-            <option value="high_risk">High risk</option>
-          </select>
+            options={filterOptions}
+            onChange={onFilterModeChange}
+          />
         </label>
         <label>
           Sort
-          <select
+          <UiSelect
             value={sortMode}
             disabled={isDisabled}
-            onChange={(event) => onSortModeChange(event.target.value as QueueSortMode)}
-          >
-            <option value="priority">Priority</option>
-            <option value="reports">Reports</option>
-            <option value="newest">Newest</option>
-          </select>
+            options={sortOptions}
+            onChange={onSortModeChange}
+          />
         </label>
       </div>
       {sortQueueItems(items, sortMode).map((item) => (

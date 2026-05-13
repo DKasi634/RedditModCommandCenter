@@ -1,5 +1,6 @@
 import { Settings } from "lucide-react";
 import type { SubredditSettings } from "../../shared/domain";
+import { UiSelect } from "./ui-select";
 
 type Props = {
   settings: SubredditSettings;
@@ -7,6 +8,14 @@ type Props = {
   isEmbedded?: boolean;
   onSave: (settings: SubredditSettings) => Promise<void>;
 };
+
+const classificationModeOptions: Array<{
+  label: string;
+  value: SubredditSettings["classificationMode"];
+}> = [
+  { label: "Manual", value: "manual" },
+  { label: "Auto on load", value: "auto_on_load" },
+];
 
 export function SettingsPanel({ settings, isDisabled = false, isEmbedded = false, onSave }: Props) {
   function update(next: Partial<SubredditSettings>) {
@@ -63,16 +72,12 @@ export function SettingsPanel({ settings, isDisabled = false, isEmbedded = false
             <strong>Classification mode</strong>
             <small>Choose manual or auto analysis</small>
           </span>
-          <select
+          <UiSelect
             value={settings.classificationMode}
             disabled={isDisabled || !settings.aiEnabled}
-            onChange={(event) =>
-              update({ classificationMode: event.target.value as SubredditSettings["classificationMode"] })
-            }
-          >
-            <option value="manual">Manual</option>
-            <option value="auto_on_load">Auto on load</option>
-          </select>
+            options={classificationModeOptions}
+            onChange={(classificationMode) => update({ classificationMode })}
+          />
         </label>
         <label className="setting-card setting-field">
           <span>
