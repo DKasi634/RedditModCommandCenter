@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { Settings, ShieldAlert } from "lucide-react";
 import { classifyItem } from "../api/classification-api";
 import { recordDecision } from "../api/decision-api";
 import { updateStatus } from "../api/queue-api";
@@ -21,6 +22,7 @@ export function CommandCenterScreen() {
   const [actionError, setActionError] = useState<string | null>(null);
   const [isActionRunning, setIsActionRunning] = useState(false);
   const [analyzingThingId, setAnalyzingThingId] = useState<string | null>(null);
+  const [operationsTab, setOperationsTab] = useState<"controls" | "settings">("controls");
   const isBusy = isLoading || isActionRunning;
   const resolvedVisible = showResolved ?? data?.settings.showResolvedByDefault ?? false;
   const activeItems = useMemo(
@@ -174,18 +176,44 @@ export function CommandCenterScreen() {
                 showSummaryByDefault={data.settings.showAiSummaryByDefault}
               />
               <UserHistoryPanel history={selected.userHistory} />
-              <DecisionPanel
-                item={selected}
-                isDisabled={isBusy}
-                isAnalyzing={analyzingThingId === selected.thingId}
-                aiEnabled={data.settings.aiEnabled}
-                onClassify={() => analyzeSelected(selected.thingId)}
-                onStatusChange={(status: WorkflowStatus) => withRefresh(() => updateStatus({ thingId: selected.thingId, status }))}
-                onDecision={(decision: Omit<ModeratorDecision, "decidedAt" | "moderatorUsername">) =>
-                  withRefresh(() => recordDecision({ decision }))
-                }
-              />
-              <SettingsPanel settings={data.settings} isDisabled={isBusy} onSave={saveSettings} />
+              <section className="panel operations-panel">
+                <div className="tabs" role="tablist" aria-label="Moderator workspace">
+                  <button
+                    role="tab"
+                    type="button"
+                    className={operationsTab === "controls" ? "tab active" : "tab"}
+                    aria-selected={operationsTab === "controls"}
+                    onClick={() => setOperationsTab("controls")}
+                  >
+                    <ShieldAlert size={16} /> Moderator controls
+                  </button>
+                  <button
+                    role="tab"
+                    type="button"
+                    className={operationsTab === "settings" ? "tab active" : "tab"}
+                    aria-selected={operationsTab === "settings"}
+                    onClick={() => setOperationsTab("settings")}
+                  >
+                    <Settings size={16} /> Moderator settings
+                  </button>
+                </div>
+                {operationsTab === "controls" ? (
+                  <DecisionPanel
+                    item={selected}
+                    isDisabled={isBusy}
+                    isAnalyzing={analyzingThingId === selected.thingId}
+                    aiEnabled={data.settings.aiEnabled}
+                    isEmbedded
+                    onClassify={() => analyzeSelected(selected.thingId)}
+                    onStatusChange={(status: WorkflowStatus) => withRefresh(() => updateStatus({ thingId: selected.thingId, status }))}
+                    onDecision={(decision: Omit<ModeratorDecision, "decidedAt" | "moderatorUsername">) =>
+                      withRefresh(() => recordDecision({ decision }))
+                    }
+                  />
+                ) : (
+                  <SettingsPanel settings={data.settings} isDisabled={isBusy} isEmbedded onSave={saveSettings} />
+                )}
+              </section>
             </div>
           </section>
         </div>

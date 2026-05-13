@@ -17,6 +17,7 @@ type Props = {
   isDisabled?: boolean;
   isAnalyzing?: boolean;
   aiEnabled?: boolean;
+  isEmbedded?: boolean;
   onStatusChange: (status: WorkflowStatus) => Promise<void>;
   onClassify: () => Promise<void>;
   onDecision: (decision: Omit<ModeratorDecision, "decidedAt" | "moderatorUsername">) => Promise<void>;
@@ -29,6 +30,7 @@ export function DecisionPanel({
   isDisabled = false,
   isAnalyzing = false,
   aiEnabled = true,
+  isEmbedded = false,
   onStatusChange,
   onClassify,
   onDecision,
@@ -67,8 +69,8 @@ export function DecisionPanel({
   }
 
   return (
-    <section className="panel decision-panel">
-      <h2><ShieldAlert size={18} /> Moderator controls</h2>
+    <section className={isEmbedded ? "tab-section decision-panel" : "panel decision-panel"}>
+      {!isEmbedded ? <h2><ShieldAlert size={18} /> Moderator controls</h2> : null}
       <div className="decision-grid">
         <label>
           Workflow status

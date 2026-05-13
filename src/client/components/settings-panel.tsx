@@ -4,20 +4,23 @@ import type { SubredditSettings } from "../../shared/domain";
 type Props = {
   settings: SubredditSettings;
   isDisabled?: boolean;
+  isEmbedded?: boolean;
   onSave: (settings: SubredditSettings) => Promise<void>;
 };
 
-export function SettingsPanel({ settings, isDisabled = false, onSave }: Props) {
+export function SettingsPanel({ settings, isDisabled = false, isEmbedded = false, onSave }: Props) {
   function update(next: Partial<SubredditSettings>) {
     void onSave({ ...settings, ...next });
   }
 
   return (
-    <section className="panel settings-panel">
-      <div className="panel-heading">
-        <h2><Settings size={18} /> Moderator settings</h2>
-        <span className="model-pill">Subreddit workspace</span>
-      </div>
+    <section className={isEmbedded ? "tab-section settings-panel" : "panel settings-panel"}>
+      {!isEmbedded ? (
+        <div className="panel-heading">
+          <h2><Settings size={18} /> Moderator settings</h2>
+          <span className="model-pill">Subreddit workspace</span>
+        </div>
+      ) : null}
       <div className="settings-grid">
         <label className="setting-card toggle-row">
           <span>
