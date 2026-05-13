@@ -2,13 +2,15 @@ import { useEffect, useMemo, useState } from "react";
 import { classifyItem } from "../api/classification-api";
 import { recordDecision } from "../api/decision-api";
 import { updateStatus } from "../api/queue-api";
+import { saveSubredditSettings } from "../api/settings-api";
 import { AiSignalPanel } from "../components/ai-signal-panel";
 import { DecisionPanel } from "../components/decision-panel";
 import { type QueueFilterMode, QueueList } from "../components/queue-list";
+import { SettingsPanel } from "../components/settings-panel";
 import { UserHistoryPanel } from "../components/user-history-panel";
 import { useQueueItems } from "../hooks/use-queue-items";
 import type { QueueSortMode } from "../utils/sort-queue-items";
-import type { ModeratorDecision, WorkflowStatus } from "../../shared/domain";
+import type { ModeratorDecision, SubredditSettings, WorkflowStatus } from "../../shared/domain";
 
 export function CommandCenterScreen() {
   const { data, error, isLoading, refresh } = useQueueItems();
@@ -75,8 +77,15 @@ export function CommandCenterScreen() {
 
   async function analyzeSelected(thingId: string) {
     setAnalyzingThingId(thingId);
-    await withRefresh(() => classifyItem(thingId));
-    setAnalyzingThingId(null);
+    try {
+      await withRefresh(() => classifyItem(thingId));
+    } finally {
+      setAnalyzingThingId(null);
+    }
+  }
+
+  async function saveSettings(settings: SubredditSettings) {
+    await withRefresh(() => saveSubredditSettings(settings));
   }
 
   return (
@@ -176,6 +185,7 @@ export function CommandCenterScreen() {
                   withRefresh(() => recordDecision({ decision }))
                 }
               />
+              <SettingsPanel settings={data.settings} isDisabled={isBusy} onSave={saveSettings} />
             </div>
           </section>
         </div>

@@ -20,6 +20,10 @@ export type StatusRequest = {
   status: WorkflowStatus;
 };
 
+export type SettingsResponse = {
+  settings: SubredditSettings;
+};
+
 export type DecisionRequest = {
   decision: Omit<ModeratorDecision, "decidedAt" | "moderatorUsername"> & {
     moderatorUsername?: string;

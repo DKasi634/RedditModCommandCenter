@@ -14,6 +14,7 @@ body {
 }
 
 button,
+input,
 select,
 textarea {
   font: inherit;
@@ -414,6 +415,7 @@ label {
 }
 
 select,
+input[type="number"],
 textarea {
   width: 100%;
   border: 1px solid #cfd8df;
@@ -436,6 +438,7 @@ button {
 }
 
 button:disabled,
+input:disabled,
 select:disabled,
 textarea:disabled {
   cursor: not-allowed;
@@ -481,6 +484,36 @@ button.compact {
   margin: 10px 0 0;
 }
 
+.settings-panel {
+  grid-column: 1 / -1;
+}
+
+.settings-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+  align-items: end;
+}
+
+.settings-grid label {
+  margin-bottom: 0;
+}
+
+.toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 42px;
+  border: 1px solid #dce2e7;
+  border-radius: 8px;
+  padding: 10px;
+  background: #f8fafb;
+}
+
+.toggle-row input {
+  width: auto;
+}
+
 .empty-state {
   display: flex;
   align-items: center;
@@ -524,6 +557,10 @@ button.compact {
   }
 
   .ai-signal-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .settings-grid {
     grid-template-columns: 1fr;
   }
 }

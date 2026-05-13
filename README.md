@@ -24,6 +24,7 @@ Mod Queue Command Center is a Devvit web app for Reddit moderators. It brings re
 - Resolved items hidden by default unless settings say otherwise.
 - Queue filters for active, all, resolved, escalated, and high-risk items.
 - Queue sorting by priority, report count, or newest.
+- In-app moderator settings for AI enablement, manual/auto classification, resolved visibility, AI reasoning visibility, and second-opinion threshold.
 - Decision records with moderator, timestamp, selected rule, note, AI feedback, and AI snapshot.
 - User history for app-tracked approvals, removals, escalations, repeated rule matches, and last action.
 
@@ -100,31 +101,79 @@ If AI is disabled in settings, Analyze/Reanalyze is disabled and classification 
 6. Refresh the queue and confirm the decision and user history persisted.
 7. Use the resolved filter/toggle to confirm resolved items are hidden by default.
 
-## QA Matrix
+## MVP QA Checklist
 
-- Post queue item appears.
-- Comment queue item appears.
-- Reported item appears.
-- Spam item appears.
-- Modqueue item appears.
-- Duplicate items are deduped.
-- Approve works.
-- Remove works.
-- Escalate works.
-- Resolved items hide by default.
-- Resolved toggle works.
+Queue loading:
+
+- A reported post appears.
+- A reported comment appears.
+- A spammed post appears.
+- A spammed comment appears.
+- A modqueue item appears.
+- The same item from multiple Reddit sources appears only once.
+- Empty queue shows a useful empty state.
+- Refresh reloads queue data without changing selected settings.
+
+Queue controls:
+
+- Active filter hides resolved items.
+- All filter shows active and resolved items.
+- Resolved filter shows only resolved items.
+- Escalated filter shows second-opinion items.
+- High-risk filter shows high-risk active items.
+- Priority sort orders by triage score.
+- Reports sort prioritizes items with more report reasons.
+- Newest sort prioritizes newest queue items.
+- Resolved toggle works from empty and populated states.
+
+AI classification:
+
+- Manual mode does not classify until Analyze is clicked.
+- Auto mode classifies not-yet-analyzed items on queue load.
+- Analyze creates a visible AI signal.
+- Reanalyze updates the analysis timestamp.
+- Gemini result shows provider/model metadata quietly.
+- Missing Gemini key falls back safely.
+- Invalid Gemini key fails calmly and shows fallback analysis.
+- Fallback analysis is labeled as fallback.
+- AI disabled disables Analyze/Reanalyze and prevents server-side classification.
+- AI reasoning expands/collapses according to `showAiSummaryByDefault`.
+
+Moderation actions:
+
+- Approve applies to Reddit.
+- Remove applies to Reddit.
+- Escalate updates local workflow status.
 - Decision persists after refresh.
 - Escalation persists after refresh.
-- User history updates after decisions.
-- Gemini classification works with production secret.
-- Local `.env` Gemini key works in playtest.
-- Missing Gemini key falls back safely.
-- Invalid Gemini key fails calmly.
-- AI disabled prevents classification.
-- Manual mode does not auto-classify.
-- Auto mode classifies when needed.
-- Reanalyze updates Last analyzed time.
-- Diagnostics are hidden from public menu.
+- Resolved item hides from active queue after decision.
+- AI feedback value is saved with the decision.
+- Moderator note is saved with the decision.
+- Selected rule and AI snapshot are saved with the decision.
+
+User history:
+
+- App-tracked approvals increment.
+- App-tracked removals increment.
+- App-tracked escalations increment.
+- Repeated rule matches are shown.
+- Last app-tracked action is shown.
+- User history persists after refresh.
+
+Settings:
+
+- AI analysis toggle saves and updates UI behavior.
+- Classification mode saves and affects manual/auto behavior.
+- Show resolved by default saves and affects the next queue load.
+- Expand AI reasoning saves and affects the AI panel.
+- Second-opinion threshold saves without validation errors for values 0-100.
+
+Secrets and environments:
+
+- Production `geminiApiKey` secret works in Devvit runtime.
+- Local `.env` `GEMINI_API_KEY` works in playtest.
+- Local `.env` is ignored by git.
+- Diagnostics are hidden from the public mod menu.
 
 ## Demo Flow
 
@@ -143,4 +192,4 @@ If AI is disabled in settings, Analyze/Reanalyze is disabled and classification 
 - Gemini output is advisory and must be reviewed by a moderator.
 - The local fallback classifier is heuristic and intentionally conservative.
 - Diagnostics remain as server endpoints but are not exposed in the public mod menu.
-- Settings are currently API-backed; a richer moderator settings UI is still planned.
+- Settings save immediately; there is not yet a separate audit trail for setting changes.
