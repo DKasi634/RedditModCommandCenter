@@ -69,41 +69,46 @@ export function DecisionPanel({
   return (
     <section className="panel decision-panel">
       <h2><ShieldAlert size={18} /> Moderator controls</h2>
-      <label>
-        Workflow status
-        <select
-          value={item.status}
-          disabled={isBusy}
-          onChange={(event) => void onStatusChange(event.target.value as WorkflowStatus)}
-        >
-          {statuses.map((status) => (
-            <option key={status} value={status}>{status.replaceAll("_", " ")}</option>
-          ))}
-        </select>
-      </label>
-      <button className="secondary" disabled={isBusy || !aiEnabled} onClick={() => void onClassify()}>
-        <RefreshCcw size={16} /> {isAnalyzing ? "Analyzing..." : analyzeLabel}
-      </button>
+      <div className="decision-grid">
+        <label>
+          Workflow status
+          <select
+            value={item.status}
+            disabled={isBusy}
+            onChange={(event) => void onStatusChange(event.target.value as WorkflowStatus)}
+          >
+            {statuses.map((status) => (
+              <option key={status} value={status}>{status.replaceAll("_", " ")}</option>
+            ))}
+          </select>
+        </label>
+        <div className="decision-ai-action">
+          <span className="field-label">AI analysis</span>
+          <button className="secondary" disabled={isBusy || !aiEnabled} onClick={() => void onClassify()}>
+            <RefreshCcw size={16} /> {isAnalyzing ? "Analyzing..." : analyzeLabel}
+          </button>
+        </div>
+        <label>
+          AI feedback
+          <select
+            value={aiFeedback}
+            disabled={isBusy}
+            onChange={(event) => setAiFeedback(event.target.value as AiFeedback)}
+          >
+            <option value="correct">Correct</option>
+            <option value="partially_correct">Partially correct</option>
+            <option value="wrong">Wrong</option>
+            <option value="unclear">Unclear</option>
+            <option value="not_useful">Not useful</option>
+            <option value="missed_context">Missed important context</option>
+          </select>
+        </label>
+        <label className="note-field">
+          Moderator note
+          <textarea value={note} disabled={isBusy} onChange={(event) => setNote(event.target.value)} rows={4} />
+        </label>
+      </div>
       {!aiEnabled ? <p className="muted action-status">AI analysis is disabled in settings.</p> : null}
-      <label>
-        AI feedback
-        <select
-          value={aiFeedback}
-          disabled={isBusy}
-          onChange={(event) => setAiFeedback(event.target.value as AiFeedback)}
-        >
-          <option value="correct">Correct</option>
-          <option value="partially_correct">Partially correct</option>
-          <option value="wrong">Wrong</option>
-          <option value="unclear">Unclear</option>
-          <option value="not_useful">Not useful</option>
-          <option value="missed_context">Missed important context</option>
-        </select>
-      </label>
-      <label>
-        Moderator note
-        <textarea value={note} disabled={isBusy} onChange={(event) => setNote(event.target.value)} rows={4} />
-      </label>
       <div className="button-row">
         <button disabled={isBusy} onClick={() => void saveDecision("approved")}><Check size={16} /> Approve</button>
         <button disabled={isBusy} onClick={() => void saveDecision("removed")}><X size={16} /> Remove</button>
