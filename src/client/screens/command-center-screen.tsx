@@ -105,8 +105,17 @@ export function CommandCenterScreen() {
         </div>
       </header>
 
-      {error || actionError ? <p className="error">{error ?? actionError}</p> : null}
-      {isLoading ? <p className="loading">Loading queue workspace...</p> : null}
+      {error ? (
+        <section className="empty-state">
+          <div>
+            <p className="eyebrow">Workspace unavailable</p>
+            <h2>{error === "Moderator access is required." ? "Moderator access required" : "Unable to load workspace"}</h2>
+            <p className="muted">{error}</p>
+          </div>
+        </section>
+      ) : null}
+      {actionError ? <p className="error">{actionError}</p> : null}
+      {isLoading ? <QueueWorkspaceSkeleton /> : null}
 
       {data && !isLoading && !selected ? (
         <section className="empty-state">
@@ -219,5 +228,59 @@ export function CommandCenterScreen() {
         </div>
       ) : null}
     </main>
+  );
+}
+
+function QueueWorkspaceSkeleton() {
+  return (
+    <div className="workspace skeleton-workspace" aria-label="Loading queue workspace" aria-busy="true">
+      <aside className="queue-list">
+        <div className="queue-list-toolbar">
+          <span className="skeleton-line short" />
+          <span className="skeleton-pill" />
+        </div>
+        <div className="queue-controls">
+          <div className="skeleton-field" />
+          <div className="skeleton-field" />
+        </div>
+        {[0, 1, 2].map((item) => (
+          <div className="queue-card skeleton-card" key={item}>
+            <span className="skeleton-line tiny" />
+            <span className="skeleton-line medium" />
+            <span className="skeleton-line short" />
+            <span className="skeleton-pill" />
+          </div>
+        ))}
+      </aside>
+      <section className="detail">
+        <article className="item-detail skeleton-detail">
+          <span className="skeleton-line short" />
+          <span className="skeleton-line title" />
+          <span className="skeleton-line wide" />
+          <span className="skeleton-pill" />
+        </article>
+        <div className="panel-grid">
+          <section className="panel skeleton-panel">
+            <span className="skeleton-line medium" />
+            <div className="skeleton-metric-row">
+              <span />
+              <span />
+              <span />
+            </div>
+            <span className="skeleton-line wide" />
+            <span className="skeleton-line medium" />
+          </section>
+          <section className="panel skeleton-panel">
+            <span className="skeleton-line medium" />
+            <div className="skeleton-metric-row">
+              <span />
+              <span />
+              <span />
+            </div>
+            <span className="skeleton-line short" />
+          </section>
+        </div>
+      </section>
+    </div>
   );
 }

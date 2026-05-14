@@ -1,4 +1,5 @@
 import { Settings } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 import type { SubredditSettings } from "../../shared/domain";
 import { UiSelect } from "./ui-select";
 
@@ -18,8 +19,32 @@ const classificationModeOptions: Array<{
 ];
 
 export function SettingsPanel({ settings, isDisabled = false, isEmbedded = false, onSave }: Props) {
+  const [draft, setDraft] = useState(settings);
+  const [thresholdInput, setThresholdInput] = useState(String(settings.secondOpinionThreshold));
+
+  useEffect(() => {
+    setDraft(settings);
+    setThresholdInput(String(settings.secondOpinionThreshold));
+  }, [settings]);
+
+  const thresholdValue = Number(thresholdInput);
+  const thresholdIsValid = thresholdInput.trim() !== "" && Number.isFinite(thresholdValue) && thresholdValue >= 0 && thresholdValue <= 100;
+  const hasChanges = useMemo(
+    () => JSON.stringify({ ...draft, secondOpinionThreshold: thresholdInput }) !==
+      JSON.stringify({ ...settings, secondOpinionThreshold: String(settings.secondOpinionThreshold) }),
+    [draft, settings, thresholdInput],
+  );
+
   function update(next: Partial<SubredditSettings>) {
-    void onSave({ ...settings, ...next });
+    setDraft((current) => ({ ...current, ...next }));
+  }
+
+  async function saveDraft() {
+    if (!thresholdIsValid) return;
+    await onSave({
+      ...draft,
+      secondOpinionThreshold: thresholdValue,
+    });
   }
 
   return (
@@ -38,7 +63,7 @@ export function SettingsPanel({ settings, isDisabled = false, isEmbedded = false
           </span>
           <input
             type="checkbox"
-            checked={settings.aiEnabled}
+            checked={draft.aiEnabled}
             disabled={isDisabled}
             onChange={(event) => update({ aiEnabled: event.target.checked })}
           />
@@ -50,7 +75,7 @@ export function SettingsPanel({ settings, isDisabled = false, isEmbedded = false
           </span>
           <input
             type="checkbox"
-            checked={settings.showResolvedByDefault}
+            checked={draft.showResolvedByDefault}
             disabled={isDisabled}
             onChange={(event) => update({ showResolvedByDefault: event.target.checked })}
           />
@@ -62,7 +87,7 @@ export function SettingsPanel({ settings, isDisabled = false, isEmbedded = false
           </span>
           <input
             type="checkbox"
-            checked={settings.showAiSummaryByDefault}
+            checked={draft.showAiSummaryByDefault}
             disabled={isDisabled}
             onChange={(event) => update({ showAiSummaryByDefault: event.target.checked })}
           />
@@ -73,8 +98,8 @@ export function SettingsPanel({ settings, isDisabled = false, isEmbedded = false
             <small>Choose manual or auto analysis</small>
           </span>
           <UiSelect
-            value={settings.classificationMode}
-            disabled={isDisabled || !settings.aiEnabled}
+            value={draft.classificationMode}
+            disabled={isDisabled || !draft.aiEnabled}
             options={classificationModeOptions}
             onChange={(classificationMode) => update({ classificationMode })}
           />
@@ -88,13 +113,22 @@ export function SettingsPanel({ settings, isDisabled = false, isEmbedded = false
             type="number"
             min={0}
             max={100}
-            value={settings.secondOpinionThreshold}
+            value={thresholdInput}
             disabled={isDisabled}
-            onChange={(event) => update({ secondOpinionThreshold: Number(event.target.value) })}
+            onChange={(event) => setThresholdInput(event.target.value)}
           />
         </label>
       </div>
-      <p className="muted">Settings save immediately and apply to this subreddit workspace.</p>
+      <div className="settings-save-row">
+        <p className={thresholdIsValid ? "muted" : "error-inline"}>
+          {thresholdIsValid
+            ? "Review changes, then save them for this subreddit workspace."
+            : "Second-opinion threshold must be between 0 and 100."}
+        </p>
+        <button disabled={isDisabled || !hasChanges || !thresholdIsValid} onClick={() => void saveDraft()}>
+          Save settings
+        </button>
+      </div>
     </section>
   );
 }
