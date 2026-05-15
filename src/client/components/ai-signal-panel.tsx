@@ -79,7 +79,7 @@ export function AiSignalPanel({
       <div className="panel-heading">
         <h2><Brain size={18} /> AI signal</h2>
         <span className="model-pill">
-          <Sparkles size={14} /> {classification.modelProvider}
+          <Sparkles size={14} /> <span>{classification.modelProvider}</span>
         </span>
       </div>
       <p className="muted analysis-metadata">{metadata}</p>

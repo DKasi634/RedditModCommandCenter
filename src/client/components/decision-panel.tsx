@@ -1,4 +1,4 @@
-import { Check, Flag, RefreshCcw, ShieldAlert, X } from "lucide-react";
+import { Archive, Flag, RefreshCcw, ShieldAlert, X } from "lucide-react";
 import { useState } from "react";
 import type { ModeratorDecision, QueueViewItem, WorkflowStatus } from "../../shared/domain";
 import { UiSelect } from "./ui-select";
@@ -119,7 +119,7 @@ export function DecisionPanel({
       </div>
       {!aiEnabled ? <p className="muted action-status">AI analysis is disabled in settings.</p> : null}
       <div className="button-row">
-        <button disabled={isBusy} onClick={() => void saveDecision("approved")}><Check size={16} /> Approve</button>
+        <button disabled={isBusy} onClick={() => void saveDecision("approved")}><Archive size={16} /> Archive</button>
         <button disabled={isBusy} onClick={() => void saveDecision("removed")}><X size={16} /> Remove</button>
         <button disabled={isBusy} onClick={() => void saveDecision("escalated")}><Flag size={16} /> Escalate</button>
       </div>

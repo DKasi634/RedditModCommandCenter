@@ -35,6 +35,10 @@ async function createCommandCenterPost() {
     },
   });
 
+  // Keep the command center reachable to moderators from the returned URL while
+  // avoiding a public launch card in the subreddit feed.
+  await post.remove(false);
+
   return post.url;
 }
 
