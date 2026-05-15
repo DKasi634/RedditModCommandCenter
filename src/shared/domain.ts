@@ -121,6 +121,7 @@ export type SecondOpinionRecord = {
 export type ModeratorWorkspaceContext = {
   currentModeratorUsername: string;
   moderatorCount: number;
+  eligibleEscalationModeratorCount: number;
   canEscalate: boolean;
 };
 

@@ -56,7 +56,7 @@ export function DecisionPanel({
   isAnalyzing = false,
   aiEnabled = true,
   isEmbedded = false,
-  canEscalate = true,
+  canEscalate = false,
   currentModeratorUsername,
   onStatusChange,
   onClassify,
