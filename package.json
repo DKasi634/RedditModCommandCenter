@@ -22,7 +22,7 @@
     "@devvit/redis": "^0.12.24-next-2026-05-12-20-08-57-3c0bd81b2.0",
     "@devvit/start": "0.12.24-next-2026-05-12-14-30-55-efb54da8c.0",
     "@devvit/web": "0.12.24-next-2026-05-12-14-30-55-efb54da8c.0",
-    "@hono/node-server": "^1.19.9",
+    "@hono/node-server": "^2.0.2",
     "@hugeicons/core-free-icons": "^4.1.4",
     "@hugeicons/react": "^1.1.6",
     "clsx": "2.1.1",
