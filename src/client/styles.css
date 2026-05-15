@@ -2,16 +2,16 @@
   color-scheme: light;
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   color: #1c1c1c;
-  background: #f6f7f8;
+  background: #dae0e6;
   --accent: #ff4500;
   --accent-hover: #d93a00;
   --accent-soft: #fff1eb;
   --ink: #1c1c1c;
   --muted: #576f76;
-  --line: #edeff1;
+  --line: #e5ebee;
   --line-strong: #c6cdd2;
   --panel: #ffffff;
-  --surface: #f6f7f8;
+  --surface: #f7f9fa;
   --surface-strong: #eef1f3;
   --radius: 4px;
   --control-radius: 16px;
@@ -25,7 +25,7 @@
 
 body {
   margin: 0;
-  background: #f6f7f8;
+  background: #dae0e6;
 }
 
 button,
@@ -37,9 +37,9 @@ textarea {
 
 .app-shell {
   min-height: 100vh;
-  max-width: 1320px;
+  max-width: 1420px;
   margin: 0 auto;
-  padding: 16px;
+  padding: 14px 16px 18px;
 }
 
 .app-shell-hidden {
@@ -52,7 +52,7 @@ textarea {
 .workspace,
 .panel,
 .item-detail {
-  border: 1px solid #dce2e7;
+  border: 1px solid var(--line);
   background: var(--panel);
 }
 
@@ -61,9 +61,9 @@ textarea {
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding: 16px 20px;
+  padding: 15px 20px;
   border-color: var(--line);
-  border-radius: 4px;
+  border-radius: 6px;
   box-shadow: var(--shadow-soft);
 }
 
@@ -76,7 +76,7 @@ p {
 
 h1 {
   margin-bottom: 0;
-  font-size: 24px;
+  font-size: 25px;
   line-height: 1.1;
   letter-spacing: 0;
 }
@@ -128,7 +128,7 @@ h3 {
 .report-row span {
   border: 1px solid var(--line);
   border-radius: 999px;
-  padding: 6px 10px;
+  padding: 5px 10px;
   color: #1c1c1c;
   background: #ffffff;
   font-size: 13px;
@@ -137,10 +137,10 @@ h3 {
 
 .workspace {
   display: grid;
-  grid-template-columns: minmax(292px, 340px) 1fr;
+  grid-template-columns: minmax(320px, 360px) 1fr;
   margin-top: 12px;
   border-color: var(--line);
-  border-radius: 4px;
+  border-radius: 6px;
   overflow: hidden;
   box-shadow: var(--shadow-soft);
 }
@@ -155,8 +155,8 @@ h3 {
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  min-height: 54px;
-  padding: 12px 14px;
+  min-height: 58px;
+  padding: 12px 16px;
   border-bottom: 1px solid var(--line);
   color: #1c1c1c;
   font-size: 13px;
@@ -167,8 +167,8 @@ h3 {
   position: relative;
   display: block;
   width: 100%;
-  min-height: 128px;
-  padding: 14px 40px 14px 14px;
+  min-height: 120px;
+  padding: 14px 42px 14px 16px;
   text-align: left;
   border: 0;
   border-bottom: 1px solid var(--line);
@@ -182,8 +182,8 @@ h3 {
 .queue-controls {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px;
-  padding: 12px 14px;
+  gap: 10px;
+  padding: 12px 16px;
   border-bottom: 1px solid var(--line);
   background: #ffffff;
 }
@@ -195,24 +195,30 @@ h3 {
 }
 
 .queue-card.selected {
-  background: #f9fafb;
+  background: #ffffff;
+  box-shadow: inset 3px 0 0 var(--accent);
 }
 
 .queue-card:hover:not(:disabled) {
-  background: #f6f7f8;
+  background: #f7f9fa;
 }
 
 .queue-card h3 {
   margin-bottom: 6px;
   line-height: 1.3;
   color: var(--ink);
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 750;
 }
 
 .queue-card-note {
+  display: inline-flex;
+  width: fit-content;
   margin: 4px 0 0;
+  border-radius: 999px;
+  padding: 2px 7px;
   color: #8a4b00;
+  background: #fff4d6;
   font-size: 12px;
   font-weight: 700;
 }
@@ -250,14 +256,14 @@ h3 {
 
 .detail {
   min-width: 0;
-  padding: 16px;
-  background: #f6f7f8;
+  padding: 16px 18px;
+  background: #f7f9fa;
 }
 
 .item-detail {
   padding: 18px 20px;
   border-color: var(--line);
-  border-radius: 4px;
+  border-radius: 6px;
   box-shadow: none;
 }
 
@@ -273,7 +279,7 @@ h3 {
 
 .panel-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1.05fr) minmax(340px, 0.95fr);
   gap: 12px;
   margin-top: 12px;
 }
@@ -281,7 +287,7 @@ h3 {
 .panel {
   padding: 16px 18px;
   border-color: var(--line);
-  border-radius: 4px;
+  border-radius: 6px;
   box-shadow: none;
 }
 
@@ -332,7 +338,7 @@ h3 {
   gap: 5px;
   min-height: 78px;
   padding: 12px;
-  border-radius: 8px;
+  border-radius: 6px;
   background: var(--surface);
 }
 
@@ -405,7 +411,7 @@ h3 {
   justify-content: space-between;
   gap: 10px;
   border: 1px solid var(--line);
-  border-radius: 4px;
+  border-radius: 6px;
   padding: 8px 10px;
   background: #ffffff;
 }
@@ -440,7 +446,7 @@ h3 {
 
 .operations-panel {
   grid-column: 1 / -1;
-  padding: 0;
+  padding: 10px 0 0;
   overflow: visible;
   border: 0;
   background: transparent;
@@ -457,7 +463,7 @@ h3 {
 
 .tab {
   position: relative;
-  min-height: 44px;
+  min-height: 42px;
   border: 0;
   border-radius: 0;
   padding: 0 2px 12px;
@@ -493,7 +499,7 @@ h3 {
 }
 
 .tab-section {
-  padding: 20px 0 0;
+  padding: 18px 0 0;
 }
 
 .decision-grid {
@@ -537,7 +543,7 @@ h3 {
   display: grid;
   gap: 10px;
   border: 1px solid #ffd6bd;
-  border-radius: 16px;
+  border-radius: 8px;
   padding: 14px;
   background: #fff7f2;
 }
@@ -621,7 +627,7 @@ h3 {
 
 .metric-grid div {
   padding: 12px;
-  border-radius: 8px;
+  border-radius: 6px;
   background: #f6f7f8;
 }
 
@@ -679,7 +685,7 @@ textarea:focus {
   justify-content: space-between;
   border: 1px solid var(--line-strong);
   border-radius: var(--control-radius);
-  padding: 8px 10px 8px 12px;
+  padding: 8px 12px;
   color: var(--ink);
   background: #ffffff;
   box-shadow: none;
@@ -707,10 +713,10 @@ textarea:focus {
   width: 100%;
   overflow: hidden;
   border: 1px solid var(--line);
-  border-radius: 12px;
+  border-radius: 14px;
   padding: 4px;
   background: #ffffff;
-  box-shadow: 0 14px 32px rgba(16, 24, 40, 0.12);
+  box-shadow: 0 12px 28px rgba(28, 28, 28, 0.14);
 }
 
 .ui-select-option {
@@ -747,7 +753,7 @@ button {
   min-height: 38px;
   border: 1px solid var(--accent);
   border-radius: 999px;
-  padding: 8px 12px;
+  padding: 8px 14px;
   color: #ffffff;
   background: var(--accent);
   font-weight: 700;
@@ -757,11 +763,11 @@ button {
 .queue-list .queue-card {
   justify-content: stretch;
   gap: 0;
-  min-height: 128px;
+  min-height: 120px;
   border: 0;
   border-bottom: 1px solid var(--line);
   border-radius: 0;
-  padding: 14px 40px 14px 14px;
+  padding: 14px 42px 14px 16px;
   color: inherit;
   background: transparent;
   font-weight: inherit;
@@ -770,6 +776,15 @@ button {
 .queue-list .queue-card.selected,
 .queue-list .queue-card:hover:not(:disabled) {
   border-color: var(--line);
+}
+
+.queue-list .queue-card.selected {
+  background: #ffffff;
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+
+.queue-list .queue-card:hover:not(:disabled) {
+  background: #f7f9fa;
 }
 
 button:hover:not(:disabled) {
@@ -843,7 +858,9 @@ button.compact {
 }
 
 .action-status {
-  margin: 10px 0 0;
+  margin: 12px 0 0;
+  color: #576f76;
+  font-size: 13px;
 }
 
 .error-inline {
@@ -925,7 +942,7 @@ button.compact {
   gap: 16px;
   margin-top: 16px;
   border-color: var(--line);
-  border-radius: 4px;
+  border-radius: 6px;
   padding: 22px;
 }
 
@@ -1033,7 +1050,7 @@ button.compact {
 
 .skeleton-field {
   height: 40px;
-  border-radius: 8px;
+  border-radius: var(--control-radius);
 }
 
 .skeleton-card {
