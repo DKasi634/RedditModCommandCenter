@@ -571,6 +571,40 @@ h3 {
   margin-top: 14px;
 }
 
+.resolution-callout {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  margin-top: 14px;
+  border: 1px solid #c7e5ff;
+  border-radius: 8px;
+  padding: 12px;
+  color: #16456f;
+  background: #f0f8ff;
+}
+
+.resolution-callout svg {
+  flex: 0 0 auto;
+  margin-top: 2px;
+}
+
+.resolution-callout strong,
+.resolution-callout span {
+  display: block;
+}
+
+.resolution-callout strong {
+  margin-bottom: 2px;
+  color: #0f3554;
+  font-size: 13px;
+}
+
+.resolution-callout span {
+  color: #356076;
+  font-size: 13px;
+  line-height: 1.35;
+}
+
 .second-opinion-form,
 .second-opinion-summary {
   display: grid;

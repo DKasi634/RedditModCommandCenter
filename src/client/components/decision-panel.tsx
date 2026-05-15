@@ -1,4 +1,4 @@
-import { Archive, Flag, RefreshCcw, ShieldAlert, X } from "lucide-react";
+import { Archive, CheckCircle2, Flag, RefreshCcw, ShieldAlert, X } from "lucide-react";
 import { useState } from "react";
 import type { ModeratorDecision, QueueViewItem, SecondOpinionReason, WorkflowStatus } from "../../shared/domain";
 import { UiSelect } from "./ui-select";
@@ -72,6 +72,7 @@ export function DecisionPanel({
   const isOwnOpenEscalation = item.secondOpinion?.status === "open" &&
     currentModeratorUsername !== undefined &&
     item.secondOpinion.escalatedBy.toLowerCase() === currentModeratorUsername.toLowerCase();
+  const isResolvingSecondOpinion = item.secondOpinion?.status === "open" && !isOwnOpenEscalation;
   const finalActionDisabled = isBusy || isOwnOpenEscalation;
   const requestSecondOpinionDisabled = isBusy || !canEscalate || item.secondOpinion?.status === "open";
 
@@ -182,6 +183,15 @@ export function DecisionPanel({
       ) : null}
       {isOwnOpenEscalation ? (
         <p className="muted action-status">Waiting for another moderator to resolve this second-opinion request.</p>
+      ) : null}
+      {isResolvingSecondOpinion ? (
+        <div className="resolution-callout">
+          <CheckCircle2 size={16} />
+          <div>
+            <strong>Resolving second opinion</strong>
+            <span>Archive or Remove will close the request from u/{item.secondOpinion?.escalatedBy} and record you as the resolving moderator.</span>
+          </div>
+        </div>
       ) : null}
       <div className="button-row">
         <button disabled={finalActionDisabled} onClick={() => void saveDecision("approved")}><Archive size={16} /> Archive</button>
