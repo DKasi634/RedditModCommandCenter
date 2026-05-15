@@ -90,11 +90,23 @@ export function CommandCenterScreen() {
     await withRefresh(() => saveSubredditSettings(settings));
   }
 
+  if (error === "Moderator access is required.") {
+    return <main className="app-shell app-shell-hidden" aria-hidden="true" />;
+  }
+
+  if (isLoading) {
+    return (
+      <main className="app-shell">
+        <QueueWorkspaceSkeleton />
+      </main>
+    );
+  }
+
   return (
     <main className="app-shell">
       <header className="topbar">
         <div>
-          <p className="eyebrow">AI-assisted moderation, human-controlled decisions</p>
+          <p className="eyebrow">Moderator workspace</p>
           <h1>Mod Queue Command Center</h1>
         </div>
         <div className="summary-strip">
@@ -109,13 +121,12 @@ export function CommandCenterScreen() {
         <section className="empty-state">
           <div>
             <p className="eyebrow">Workspace unavailable</p>
-            <h2>{error === "Moderator access is required." ? "Moderator access required" : "Unable to load workspace"}</h2>
+            <h2>Unable to load workspace</h2>
             <p className="muted">{error}</p>
           </div>
         </section>
       ) : null}
       {actionError ? <p className="error">{actionError}</p> : null}
-      {isLoading ? <QueueWorkspaceSkeleton /> : null}
 
       {data && !isLoading && !selected ? (
         <section className="empty-state">
