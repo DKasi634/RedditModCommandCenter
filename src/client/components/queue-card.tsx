@@ -22,7 +22,7 @@ export function QueueCard({ item, isSelected, onSelect, isDisabled = false }: Pr
     ? `${Math.round(item.classification.confidence * 100)}%`
     : item.classificationState === "disabled"
       ? "Off"
-      : "Not analyzed";
+      : "No signal";
 
   return (
     <button
@@ -44,7 +44,7 @@ export function QueueCard({ item, isSelected, onSelect, isDisabled = false }: Pr
         <span title="Triage score">
           <MessageSquareWarning size={14} /> {item.triageScore}
         </span>
-        <span title="AI confidence">
+        <span title="Signal confidence">
           <Brain size={14} /> {aiLabel}
         </span>
       </div>

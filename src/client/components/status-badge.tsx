@@ -7,7 +7,7 @@ const statusLabels: Record<WorkflowStatus, string> = {
   likely_approve: "Likely approve",
   likely_remove: "Likely remove",
   resolved: "Resolved",
-  ignored_ai_suggestion: "AI ignored"
+  ignored_ai_suggestion: "Suggestion ignored"
 };
 
 export function StatusBadge({ status }: { status: WorkflowStatus }) {
@@ -15,5 +15,5 @@ export function StatusBadge({ status }: { status: WorkflowStatus }) {
 }
 
 export function RiskBadge({ riskLevel }: { riskLevel?: RiskLevel | undefined }) {
-  return <span className={`badge risk-${riskLevel ?? "none"}`}>{riskLevel ?? "no ai"}</span>;
+  return <span className={`badge risk-${riskLevel ?? "none"}`}>{riskLevel ?? "no signal"}</span>;
 }

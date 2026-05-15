@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Settings, ShieldAlert } from "lucide-react";
+import { RefreshCcw, Settings, ShieldAlert } from "lucide-react";
 import { classifyItem } from "../api/classification-api";
 import { recordDecision } from "../api/decision-api";
 import { updateStatus } from "../api/queue-api";
@@ -15,11 +15,42 @@ import type { QueueSortMode } from "../utils/sort-queue-items";
 import type { ModeratorDecision, SecondOpinionReason, SubredditSettings, WorkflowStatus } from "../../shared/domain";
 
 const secondOpinionReasonLabels: Record<SecondOpinionReason, string> = {
-  senior_mod_review: "Needs senior mod",
+  senior_mod_review: "Needs another moderator",
   rule_ambiguity: "Rule ambiguity",
   policy_question: "Possible policy issue",
   context_unclear: "Context unclear",
   other: "Other",
+};
+
+const emptyFilterCopy: Record<QueueFilterMode, { title: string; description: string }> = {
+  active: {
+    title: "No active queue items right now",
+    description: "Report or filter a test post/comment in this subreddit, then refresh this workspace.",
+  },
+  all: {
+    title: "No queue items right now",
+    description: "Report or filter a test post/comment in this subreddit, then refresh this workspace.",
+  },
+  resolved: {
+    title: "No resolved items yet",
+    description: "Archived and removed items will appear here after the mod team takes action.",
+  },
+  second_opinion: {
+    title: "No second-opinion requests",
+    description: "Items sent for another moderator's review will appear here.",
+  },
+  requested_by_me: {
+    title: "No requests from you",
+    description: "Second-opinion requests you create will appear here until another moderator resolves them.",
+  },
+  resolved_second_opinions: {
+    title: "No resolved second opinions",
+    description: "Second-opinion requests appear here after another moderator closes them.",
+  },
+  high_risk: {
+    title: "No high-risk items",
+    description: "Items with stronger review signals will appear here after guided review runs.",
+  },
 };
 
 function relativeTime(value: string) {
@@ -95,6 +126,7 @@ export function CommandCenterScreen() {
     if (!visibleItems.length) return undefined;
     return visibleItems.find((item) => item.thingId === selectedThingId) ?? visibleItems[0];
   }, [selectedThingId, visibleItems]);
+  const emptyCopy = emptyFilterCopy[filterMode];
 
   useEffect(() => {
     if (showResolved === undefined && data) {
@@ -148,11 +180,16 @@ export function CommandCenterScreen() {
           <p className="eyebrow">Moderator workspace</p>
           <h1>Mod Queue Command Center</h1>
         </div>
-        <div className="summary-strip">
-          <span>{activeItems.length} active</span>
-          <span>{resolvedCount} resolved</span>
-          <span>{data?.items.filter((item) => item.status === "needs_second_opinion").length ?? 0} second opinion</span>
-          <span>AI {data?.settings.aiEnabled ? "enabled" : "disabled"}</span>
+        <div className="topbar-actions">
+          <div className="summary-strip">
+            <span>{activeItems.length} active</span>
+            <span>{resolvedCount} resolved</span>
+            <span>{data?.items.filter((item) => item.status === "needs_second_opinion").length ?? 0} second opinion</span>
+            <span>Signals {data?.settings.aiEnabled ? "enabled" : "disabled"}</span>
+          </div>
+          <button className="secondary compact topbar-refresh" disabled={isBusy} onClick={() => void refresh()}>
+            <RefreshCcw size={14} /> Refresh
+          </button>
         </div>
       </header>
 
@@ -171,11 +208,11 @@ export function CommandCenterScreen() {
         <section className="empty-state">
           <div>
             <p className="eyebrow">Live queue ready</p>
-            <h2>{resolvedVisible ? "No queue items right now" : "No active queue items right now"}</h2>
+            <h2>{emptyCopy.title}</h2>
             <p className="muted">
               {resolvedCount > 0 && !resolvedVisible
                 ? "Resolved items are hidden from the active queue."
-                : "Report or filter a test post/comment in this subreddit, then refresh this workspace."}
+                : emptyCopy.description}
             </p>
           </div>
           <div className="button-row">

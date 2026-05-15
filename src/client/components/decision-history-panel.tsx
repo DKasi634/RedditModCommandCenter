@@ -5,7 +5,7 @@ const actionLabels: Record<ModeratorDecision["finalAction"], string> = {
   approved: "Archived",
   removed: "Removed",
   escalated: "Second opinion requested",
-  ignored: "Ignored AI suggestion",
+  ignored: "Suggestion ignored",
 };
 
 const feedbackLabels: Record<NonNullable<ModeratorDecision["aiFeedback"]>, string> = {
@@ -58,11 +58,11 @@ export function DecisionHistoryPanel({ decision }: { decision: ModeratorDecision
           <dd>{formatDecisionTime(decision.decidedAt)}</dd>
         </div>
         <div>
-          <dt>AI snapshot</dt>
-          <dd>{decision.aiSnapshot ? `${decision.aiSnapshot.modelProvider} / ${decision.aiSnapshot.modelVersion}` : "Not used"}</dd>
+          <dt>Review snapshot</dt>
+          <dd>{decision.aiSnapshot ? "Saved with decision" : "Not used"}</dd>
         </div>
         <div>
-          <dt>AI feedback</dt>
+          <dt>Signal feedback</dt>
           <dd>{decision.aiFeedback ? feedbackLabels[decision.aiFeedback] : "Not recorded"}</dd>
         </div>
         {decision.selectedRuleTitle ? (

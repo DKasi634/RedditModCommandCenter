@@ -12,27 +12,27 @@ const actionLabels: Record<ClassificationResult["suggestedAction"], string> = {
 
 function analysisMetadata(classification: ClassificationResult, state: ClassificationState) {
   if (state === "fallback") {
-    return "Fallback analysis shown";
+    return "Local review signal shown";
   }
 
   const createdAt = new Date(classification.createdAt).getTime();
   const elapsedSeconds = Number.isFinite(createdAt) ? Math.max(0, Math.floor((Date.now() - createdAt) / 1000)) : 0;
 
   if (elapsedSeconds < 60) {
-    return "Analyzed just now";
+    return "Reviewed just now";
   }
 
   const elapsedMinutes = Math.floor(elapsedSeconds / 60);
   if (elapsedMinutes < 60) {
-    return `Last analyzed ${elapsedMinutes}m ago`;
+    return `Last reviewed ${elapsedMinutes}m ago`;
   }
 
   const elapsedHours = Math.floor(elapsedMinutes / 60);
   if (elapsedHours < 24) {
-    return `Last analyzed ${elapsedHours}h ago`;
+    return `Last reviewed ${elapsedHours}h ago`;
   }
 
-  return `Last analyzed ${Math.floor(elapsedHours / 24)}d ago`;
+  return `Last reviewed ${Math.floor(elapsedHours / 24)}d ago`;
 }
 
 export function AiSignalPanel({
@@ -47,8 +47,8 @@ export function AiSignalPanel({
   if (state === "disabled") {
     return (
       <section className="panel">
-        <h2><Brain size={18} /> AI signal</h2>
-        <p className="muted">AI analysis is disabled for this workspace.</p>
+        <h2><Brain size={18} /> Review signal</h2>
+        <p className="muted">Review signals are disabled for this workspace.</p>
       </section>
     );
   }
@@ -56,8 +56,8 @@ export function AiSignalPanel({
   if (state === "analyzing") {
     return (
       <section className="panel">
-        <h2><Brain size={18} /> AI signal</h2>
-        <p className="muted">Analyzing this item...</p>
+        <h2><Brain size={18} /> Review signal</h2>
+        <p className="muted">Reading context and preparing guidance...</p>
       </section>
     );
   }
@@ -65,8 +65,8 @@ export function AiSignalPanel({
   if (!classification) {
     return (
       <section className="panel">
-        <h2><Brain size={18} /> AI signal</h2>
-        <p className="muted">Not analyzed yet. Moderators can review manually or run AI analysis.</p>
+        <h2><Brain size={18} /> Review signal</h2>
+        <p className="muted">No review signal yet. Moderators can review manually or run a guided review.</p>
       </section>
     );
   }
@@ -77,9 +77,9 @@ export function AiSignalPanel({
   return (
     <section className="panel ai-signal-panel">
       <div className="panel-heading">
-        <h2><Brain size={18} /> AI signal</h2>
+        <h2><Brain size={18} /> Review signal</h2>
         <span className="model-pill">
-          <Sparkles size={14} /> <span>{classification.modelProvider}</span>
+          <Sparkles size={14} /> <span>Command Center</span>
         </span>
       </div>
       <p className="muted analysis-metadata">{metadata}</p>
@@ -121,7 +121,7 @@ export function AiSignalPanel({
         <p className="muted">No direct subreddit rule match.</p>
       )}
       <details className="ai-details" open={showSummaryByDefault}>
-        <summary>Reasoning for mods</summary>
+        <summary>Context notes for mods</summary>
         <ul className="reasoning-list">
           {classification.reasoningForMods.map((reason) => (
             <li key={reason}>{reason}</li>
@@ -129,7 +129,7 @@ export function AiSignalPanel({
         </ul>
       </details>
       <p className="muted model-footnote">
-        {classification.modelVersion} / {classification.promptVersion}
+        Generated as moderator guidance. Final decisions stay with the mod team.
       </p>
     </section>
   );

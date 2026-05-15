@@ -58,8 +58,8 @@ export function SettingsPanel({ settings, isDisabled = false, isEmbedded = false
       <div className="settings-grid">
         <label className="setting-card toggle-row">
           <span>
-            <strong>AI analysis</strong>
-            <small>Allow Gemini-assisted review</small>
+            <strong>Guided review</strong>
+            <small>Enable Command Center review signals</small>
           </span>
           <input
             type="checkbox"
@@ -82,8 +82,8 @@ export function SettingsPanel({ settings, isDisabled = false, isEmbedded = false
         </label>
         <label className="setting-card toggle-row">
           <span>
-            <strong>AI reasoning</strong>
-            <small>Expand reasoning by default</small>
+            <strong>Context notes</strong>
+            <small>Expand review notes by default</small>
           </span>
           <input
             type="checkbox"
@@ -94,8 +94,8 @@ export function SettingsPanel({ settings, isDisabled = false, isEmbedded = false
         </label>
         <label className="setting-card setting-field">
           <span>
-            <strong>Classification mode</strong>
-            <small>Choose manual or auto analysis</small>
+            <strong>Review mode</strong>
+            <small>Choose manual or automatic guidance</small>
           </span>
           <UiSelect
             value={draft.classificationMode}
