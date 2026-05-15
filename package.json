@@ -27,7 +27,7 @@
     "@hugeicons/react": "^1.1.6",
     "clsx": "2.1.1",
     "devvit": "^0.12.24-next-2026-05-12-14-30-55-efb54da8c.0",
-    "hono": "4.11.7",
+    "hono": "4.12.18",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "tailwind-merge": "3.4.0",
