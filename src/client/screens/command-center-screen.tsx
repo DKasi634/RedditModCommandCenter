@@ -11,7 +11,15 @@ import { SettingsPanel } from "../components/settings-panel";
 import { UserHistoryPanel } from "../components/user-history-panel";
 import { useQueueItems } from "../hooks/use-queue-items";
 import type { QueueSortMode } from "../utils/sort-queue-items";
-import type { ModeratorDecision, SubredditSettings, WorkflowStatus } from "../../shared/domain";
+import type { ModeratorDecision, SecondOpinionReason, SubredditSettings, WorkflowStatus } from "../../shared/domain";
+
+const secondOpinionReasonLabels: Record<SecondOpinionReason, string> = {
+  senior_mod_review: "Needs senior mod",
+  rule_ambiguity: "Rule ambiguity",
+  policy_question: "Possible policy issue",
+  context_unclear: "Context unclear",
+  other: "Other",
+};
 
 export function CommandCenterScreen() {
   const { data, error, isLoading, refresh } = useQueueItems();
@@ -188,6 +196,19 @@ export function CommandCenterScreen() {
               <div className="report-row">
                 {selected.reportReasons.map((reason) => <span key={reason}>{reason}</span>)}
               </div>
+              {selected.secondOpinion ? (
+                <div className="second-opinion-summary">
+                  <strong>
+                    {selected.secondOpinion.status === "open" ? "Escalated for review" : "Escalation resolved"}
+                  </strong>
+                  <span>{secondOpinionReasonLabels[selected.secondOpinion.reason]}</span>
+                  <span>
+                    Escalated by u/{selected.secondOpinion.escalatedBy}
+                    {selected.secondOpinion.resolvedBy ? ` · Resolved by u/${selected.secondOpinion.resolvedBy}` : ""}
+                  </span>
+                  {selected.secondOpinion.note ? <p>{selected.secondOpinion.note}</p> : null}
+                </div>
+              ) : null}
             </article>
             <div className="panel-grid">
               <AiSignalPanel

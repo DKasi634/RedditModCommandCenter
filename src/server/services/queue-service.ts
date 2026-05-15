@@ -3,6 +3,7 @@ import { fetchModerationQueue } from "../integrations/reddit-client";
 import { requestClassification } from "../integrations/ai-backend-client";
 import { getClassification } from "../repositories/classification-repository";
 import { getStatus } from "../repositories/status-repository";
+import { getSecondOpinion } from "../repositories/second-opinion-repository";
 import { getUserHistory } from "../repositories/user-history-repository";
 import { getSettings } from "../repositories/settings-repository";
 import { saveClassification } from "../repositories/classification-repository";
@@ -54,10 +55,11 @@ export async function getQueueView() {
 
   const viewItems: QueueViewItem[] = await Promise.all(
     items.map(async (item) => {
-      const [storedClassification, status, userHistory] = await Promise.all([
+      const [storedClassification, status, userHistory, secondOpinion] = await Promise.all([
         getClassification(item.thingId),
         getStatus(item.thingId),
-        getUserHistory(item.authorUsername ?? "unknown")
+        getUserHistory(item.authorUsername ?? "unknown"),
+        getSecondOpinion(item.thingId)
       ]);
       const classification = await autoClassifyIfNeeded(
         item,
@@ -66,7 +68,11 @@ export async function getQueueView() {
         settings.aiEnabled,
         settings.classificationMode,
       );
-      const viewStatus = classification?.needsSecondOpinion ? "needs_second_opinion" : status;
+      const viewStatus = status === "resolved"
+        ? status
+        : secondOpinion?.status === "open" || classification?.needsSecondOpinion
+          ? "needs_second_opinion"
+          : status;
 
       return {
         ...item,
@@ -74,6 +80,7 @@ export async function getQueueView() {
         classificationState: classificationState(classification, settings.aiEnabled),
         status: viewStatus,
         userHistory,
+        secondOpinion,
         triageScore: calculateTriageScore(item, classification, userHistory)
       };
     })

@@ -22,6 +22,13 @@ export const decisionRequestSchema = z.object({
     selectedRuleTitle: z.string().optional(),
     moderatorUsername: z.string().optional(),
     note: z.string().optional(),
+    secondOpinionReason: z.enum([
+      "senior_mod_review",
+      "rule_ambiguity",
+      "policy_question",
+      "context_unclear",
+      "other"
+    ]).optional(),
     aiFeedback: z.enum([
       "correct",
       "partially_correct",

@@ -18,6 +18,13 @@ export type ClassificationState =
   | "disabled"
   | "fallback";
 
+export type SecondOpinionReason =
+  | "senior_mod_review"
+  | "rule_ambiguity"
+  | "policy_question"
+  | "context_unclear"
+  | "other";
+
 export type QueueItem = {
   thingId: string;
   itemType: ItemType;
@@ -96,7 +103,19 @@ export type ModeratorDecision = {
   note?: string;
   aiFeedback?: "correct" | "partially_correct" | "wrong" | "unclear" | "not_useful" | "missed_context";
   aiSnapshot?: ClassificationResult;
+  secondOpinionReason?: SecondOpinionReason;
   decidedAt: string;
+};
+
+export type SecondOpinionRecord = {
+  thingId: string;
+  reason: SecondOpinionReason;
+  note?: string;
+  escalatedBy: string;
+  escalatedAt: string;
+  status: "open" | "resolved";
+  resolvedBy?: string;
+  resolvedAt?: string;
 };
 
 export type SubredditSettings = {
@@ -115,4 +134,5 @@ export type QueueViewItem = QueueItem & {
   status: WorkflowStatus;
   triageScore: number;
   userHistory: UserHistory;
+  secondOpinion?: SecondOpinionRecord;
 };

@@ -1,6 +1,6 @@
 import { Archive, Flag, RefreshCcw, ShieldAlert, X } from "lucide-react";
 import { useState } from "react";
-import type { ModeratorDecision, QueueViewItem, WorkflowStatus } from "../../shared/domain";
+import type { ModeratorDecision, QueueViewItem, SecondOpinionReason, WorkflowStatus } from "../../shared/domain";
 import { UiSelect } from "./ui-select";
 
 type AiFeedback = NonNullable<ModeratorDecision["aiFeedback"]>;
@@ -29,6 +29,14 @@ const aiFeedbackOptions: Array<{ label: string; value: AiFeedback }> = [
   { label: "Missed important context", value: "missed_context" },
 ];
 
+const secondOpinionReasonOptions: Array<{ label: string; value: SecondOpinionReason }> = [
+  { label: "Needs senior mod", value: "senior_mod_review" },
+  { label: "Rule ambiguity", value: "rule_ambiguity" },
+  { label: "Possible policy issue", value: "policy_question" },
+  { label: "Context unclear", value: "context_unclear" },
+  { label: "Other", value: "other" },
+];
+
 type Props = {
   item: QueueViewItem;
   isDisabled?: boolean;
@@ -52,11 +60,16 @@ export function DecisionPanel({
 }: Props) {
   const [note, setNote] = useState("");
   const [aiFeedback, setAiFeedback] = useState<AiFeedback>("correct");
+  const [isEscalating, setIsEscalating] = useState(false);
+  const [secondOpinionReason, setSecondOpinionReason] = useState<SecondOpinionReason>("context_unclear");
   const [isSaving, setIsSaving] = useState(false);
   const isBusy = isDisabled || isSaving;
   const analyzeLabel = item.classification ? "Reanalyze with AI" : "Analyze with AI";
 
-  async function saveDecision(finalAction: ModeratorDecision["finalAction"]) {
+  async function saveDecision(
+    finalAction: ModeratorDecision["finalAction"],
+    options: { secondOpinionReason?: SecondOpinionReason } = {},
+  ) {
     setIsSaving(true);
     try {
       const matchedRule = item.classification?.matchedRules[0];
@@ -76,8 +89,17 @@ export function DecisionPanel({
         decision.selectedRuleTitle = matchedRule.ruleTitle;
       }
 
+      if (options.secondOpinionReason) {
+        decision.secondOpinionReason = options.secondOpinionReason;
+      }
+
       await onDecision(decision);
-      await onStatusChange("resolved");
+      if (finalAction === "approved" || finalAction === "removed") {
+        await onStatusChange("resolved");
+      } else if (finalAction === "escalated") {
+        await onStatusChange("needs_second_opinion");
+        setIsEscalating(false);
+      }
     } finally {
       setIsSaving(false);
     }
@@ -117,11 +139,39 @@ export function DecisionPanel({
           <textarea value={note} disabled={isBusy} onChange={(event) => setNote(event.target.value)} rows={4} />
         </label>
       </div>
+      {isEscalating ? (
+        <div className="second-opinion-form">
+          <div>
+            <h3>Escalate for review</h3>
+            <p className="muted">Send this item for another moderator to review before a final action.</p>
+          </div>
+          <label>
+            Reason
+            <UiSelect
+              value={secondOpinionReason}
+              disabled={isBusy}
+              options={secondOpinionReasonOptions}
+              onChange={setSecondOpinionReason}
+            />
+          </label>
+          <div className="button-row">
+            <button
+              disabled={isBusy}
+              onClick={() => void saveDecision("escalated", { secondOpinionReason })}
+            >
+              <Flag size={16} /> Confirm escalation
+            </button>
+            <button className="secondary" disabled={isBusy} onClick={() => setIsEscalating(false)}>
+              Cancel
+            </button>
+          </div>
+        </div>
+      ) : null}
       {!aiEnabled ? <p className="muted action-status">AI analysis is disabled in settings.</p> : null}
       <div className="button-row">
         <button disabled={isBusy} onClick={() => void saveDecision("approved")}><Archive size={16} /> Archive</button>
         <button disabled={isBusy} onClick={() => void saveDecision("removed")}><X size={16} /> Remove</button>
-        <button disabled={isBusy} onClick={() => void saveDecision("escalated")}><Flag size={16} /> Escalate</button>
+        <button disabled={isBusy} onClick={() => setIsEscalating(true)}><Flag size={16} /> Escalate</button>
       </div>
       {isBusy ? <p className="muted action-status">Working...</p> : null}
     </section>
