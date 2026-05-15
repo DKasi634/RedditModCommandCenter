@@ -1,10 +1,37 @@
 @import "tailwindcss";
 
 :root {
-  color-scheme: light;
+  color-scheme: light dark;
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  color: #1c1c1c;
-  background: #dae0e6;
+  color: var(--cc-text);
+  background: var(--cc-page);
+  --cc-page: #dae0e6;
+  --cc-canvas: #f7f9fa;
+  --cc-panel: #ffffff;
+  --cc-subtle: #f6f7f8;
+  --cc-chip: #eef2f6;
+  --cc-skeleton: #edf1f5;
+  --cc-text: #1c1c1c;
+  --cc-muted: #576f76;
+  --cc-muted-strong: #344054;
+  --cc-border: #e5ebee;
+  --cc-border-strong: #c6cdd2;
+  --cc-meter-track: #dbe3e7;
+  --cc-accent: #ff4500;
+  --cc-accent-hover: #d93a00;
+  --cc-accent-strong: #d93a00;
+  --cc-accent-soft: #fff1eb;
+  --cc-accent-soft-border: #fed8c7;
+  --cc-accent-ring: rgb(255 69 0 / 0.15);
+  --cc-warning-bg: #fffaeb;
+  --cc-warning-border: #fedf89;
+  --cc-warning-text: #93370d;
+  --cc-success-bg: #ecfdf3;
+  --cc-success-border: #abefc6;
+  --cc-success-text: #027a48;
+  --cc-danger-bg: #fee4e2;
+  --cc-danger-border: #fecdca;
+  --cc-danger-text: #b42318;
 }
 
 * {
@@ -13,7 +40,7 @@
 
 body {
   margin: 0;
-  background: #dae0e6;
+  background: var(--cc-page);
 }
 
 button,
@@ -21,4 +48,36 @@ input,
 select,
 textarea {
   font: inherit;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --cc-page: #0b1117;
+    --cc-canvas: #101820;
+    --cc-panel: #151d25;
+    --cc-subtle: #1c2730;
+    --cc-chip: #202c36;
+    --cc-skeleton: #24313c;
+    --cc-text: #f2f5f7;
+    --cc-muted: #9aa8b3;
+    --cc-muted-strong: #c2cbd2;
+    --cc-border: #27343f;
+    --cc-border-strong: #40505d;
+    --cc-meter-track: #33424d;
+    --cc-accent: #ff5d22;
+    --cc-accent-hover: #ff4500;
+    --cc-accent-strong: #ff8a5c;
+    --cc-accent-soft: #32180d;
+    --cc-accent-soft-border: #7a3517;
+    --cc-accent-ring: rgb(255 93 34 / 0.22);
+    --cc-warning-bg: #2d2108;
+    --cc-warning-border: #7a530f;
+    --cc-warning-text: #ffd48a;
+    --cc-success-bg: #0e2a1c;
+    --cc-success-border: #236a46;
+    --cc-success-text: #86efac;
+    --cc-danger-bg: #351314;
+    --cc-danger-border: #7f1d1d;
+    --cc-danger-text: #fca5a5;
+  }
 }

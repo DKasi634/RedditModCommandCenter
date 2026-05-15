@@ -16,12 +16,12 @@ export function UserHistoryPanel({ history }: { history: UserHistory }) {
 
   return (
     <section className={panel}>
-      <h2 className="mb-4 flex items-center gap-2 text-lg font-bold text-[#1c1c1c]"><Icon name="history" /> User history</h2>
+      <h2 className="mb-4 flex items-center gap-2 text-lg font-bold text-[var(--cc-text)]"><Icon name="history" /> User history</h2>
       <div className="mb-3 grid grid-cols-4 gap-2.5 max-[720px]:grid-cols-2">
-        <div className="rounded-md bg-[#f6f7f8] p-3"><strong className="block text-xl">{history.previousWarnings}</strong><span className={muted}>Warnings</span></div>
-        <div className="rounded-md bg-[#f6f7f8] p-3"><strong className="block text-xl">{history.previousApprovals ?? 0}</strong><span className={muted}>Approvals</span></div>
-        <div className="rounded-md bg-[#f6f7f8] p-3"><strong className="block text-xl">{history.previousRemovals}</strong><span className={muted}>Removals</span></div>
-        <div className="rounded-md bg-[#f6f7f8] p-3"><strong className="block text-xl">{history.previousSecondOpinions}</strong><span className={muted}>Escalations</span></div>
+        <div className="rounded-md bg-[var(--cc-subtle)] p-3"><strong className="block text-xl">{history.previousWarnings}</strong><span className={muted}>Warnings</span></div>
+        <div className="rounded-md bg-[var(--cc-subtle)] p-3"><strong className="block text-xl">{history.previousApprovals ?? 0}</strong><span className={muted}>Approvals</span></div>
+        <div className="rounded-md bg-[var(--cc-subtle)] p-3"><strong className="block text-xl">{history.previousRemovals}</strong><span className={muted}>Removals</span></div>
+        <div className="rounded-md bg-[var(--cc-subtle)] p-3"><strong className="block text-xl">{history.previousSecondOpinions}</strong><span className={muted}>Escalations</span></div>
       </div>
       {history.repeatedRuleTags.length > 0 ? (
         <p className={muted}>Repeated matches: {history.repeatedRuleTags.join(", ")}</p>

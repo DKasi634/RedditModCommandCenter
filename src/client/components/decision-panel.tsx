@@ -118,7 +118,7 @@ export function DecisionPanel({
 
   return (
     <section className={isEmbedded ? "" : panel}>
-      {!isEmbedded ? <h2 className="mb-4 flex items-center gap-2 text-lg font-bold text-[#1c1c1c]"><Icon name="shield" /> Moderator controls</h2> : null}
+      {!isEmbedded ? <h2 className="mb-4 flex items-center gap-2 text-lg font-bold text-[var(--cc-text)]"><Icon name="shield" /> Moderator controls</h2> : null}
       <div className="grid grid-cols-3 gap-3 max-[960px]:grid-cols-1">
         <label className="text-sm font-bold">
           Workflow status
@@ -157,7 +157,7 @@ export function DecisionPanel({
         </label>
       </div>
       {isEscalating ? (
-        <div className="mt-4 rounded-md border border-[#fedf89] bg-[#fffaeb] p-4">
+        <div className="mt-4 rounded-md border border-[var(--cc-warning-border)] bg-[var(--cc-warning-bg)] p-4">
           <div>
             <h3 className="mb-1 text-sm font-bold">Request second opinion</h3>
             <p className={muted}>Ask another moderator to review this item before a final action is taken.</p>
@@ -193,7 +193,7 @@ export function DecisionPanel({
         <p className={`mt-3 ${muted}`}>Waiting for another moderator to resolve this second-opinion request.</p>
       ) : null}
       {isResolvingSecondOpinion ? (
-        <div className="mt-4 flex gap-2 rounded-md border border-[#abefc6] bg-[#ecfdf3] p-3 text-sm text-[#027a48]">
+        <div className="mt-4 flex gap-2 rounded-md border border-[var(--cc-success-border)] bg-[var(--cc-success-bg)] p-3 text-sm text-[var(--cc-success-text)]">
           <Icon name="checkCircle" size={16} />
           <div>
             <strong>Resolving second opinion</strong>

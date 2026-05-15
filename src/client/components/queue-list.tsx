@@ -57,8 +57,8 @@ export function QueueList({
   onSortModeChange,
 }: Props) {
   return (
-    <aside className="border-r border-[#e5ebee] bg-white">
-      <div className="flex min-h-[58px] items-center justify-between gap-2 border-b border-[#e5ebee] px-4 py-3 text-sm font-bold text-[#1c1c1c]">
+    <aside className="border-r border-[var(--cc-border)] bg-[var(--cc-panel)]">
+      <div className="flex min-h-[58px] items-center justify-between gap-2 border-b border-[var(--cc-border)] px-4 py-3 text-sm font-bold text-[var(--cc-text)]">
         <span>{showResolved ? "All items" : "Active items"}</span>
         {resolvedCount > 0 && onToggleResolved ? (
           <button className={`${buttonSecondary} ${buttonCompact}`} disabled={isDisabled} onClick={onToggleResolved}>
@@ -66,8 +66,8 @@ export function QueueList({
           </button>
         ) : null}
       </div>
-      <div className="grid grid-cols-2 gap-2.5 border-b border-[#e5ebee] bg-white px-4 py-3">
-        <label className="mb-0 text-xs font-semibold text-[#576f76]">
+      <div className="grid grid-cols-2 gap-2.5 border-b border-[var(--cc-border)] bg-[var(--cc-panel)] px-4 py-3">
+        <label className="mb-0 text-xs font-semibold text-[var(--cc-muted)]">
           Filter
           <UiSelect
             value={filterMode}
@@ -76,7 +76,7 @@ export function QueueList({
             onChange={onFilterModeChange}
           />
         </label>
-        <label className="mb-0 text-xs font-semibold text-[#576f76]">
+        <label className="mb-0 text-xs font-semibold text-[var(--cc-muted)]">
           Sort
           <UiSelect
             value={sortMode}

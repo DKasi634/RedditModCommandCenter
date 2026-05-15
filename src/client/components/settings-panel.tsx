@@ -52,12 +52,12 @@ export function SettingsPanel({ settings, isDisabled = false, isEmbedded = false
     <section className={isEmbedded ? "" : panel}>
       {!isEmbedded ? (
         <div className="mb-4 flex items-center justify-between gap-3">
-          <h2 className="mb-0 flex items-center gap-2 text-lg font-bold text-[#1c1c1c]"><Icon name="settings" /> Moderator settings</h2>
-          <span className="inline-flex rounded-full border border-[#e3e8ef] bg-[#eef2f6] px-2 py-0.5 text-xs font-bold text-[#475467]">Subreddit workspace</span>
+          <h2 className="mb-0 flex items-center gap-2 text-lg font-bold text-[var(--cc-text)]"><Icon name="settings" /> Moderator settings</h2>
+          <span className="inline-flex rounded-full border border-[var(--cc-border)] bg-[var(--cc-chip)] px-2 py-0.5 text-xs font-bold text-[var(--cc-muted-strong)]">Subreddit workspace</span>
         </div>
       ) : null}
       <div className="grid grid-cols-5 gap-3 max-[1180px]:grid-cols-2 max-[720px]:grid-cols-1">
-        <label className="flex min-h-[74px] items-center justify-between gap-3 rounded-md bg-[#f6f7f8] p-3">
+        <label className="flex min-h-[74px] items-center justify-between gap-3 rounded-md bg-[var(--cc-subtle)] p-3">
           <span>
             <strong className="block">Guided review</strong>
             <small className={muted}>Enable Command Center review signals</small>
@@ -69,7 +69,7 @@ export function SettingsPanel({ settings, isDisabled = false, isEmbedded = false
             onChange={(event) => update({ aiEnabled: event.target.checked })}
           />
         </label>
-        <label className="flex min-h-[74px] items-center justify-between gap-3 rounded-md bg-[#f6f7f8] p-3">
+        <label className="flex min-h-[74px] items-center justify-between gap-3 rounded-md bg-[var(--cc-subtle)] p-3">
           <span>
             <strong className="block">Resolved default</strong>
             <small className={muted}>Open with resolved items visible</small>
@@ -81,7 +81,7 @@ export function SettingsPanel({ settings, isDisabled = false, isEmbedded = false
             onChange={(event) => update({ showResolvedByDefault: event.target.checked })}
           />
         </label>
-        <label className="flex min-h-[74px] items-center justify-between gap-3 rounded-md bg-[#f6f7f8] p-3">
+        <label className="flex min-h-[74px] items-center justify-between gap-3 rounded-md bg-[var(--cc-subtle)] p-3">
           <span>
             <strong className="block">Context notes</strong>
             <small className={muted}>Expand review notes by default</small>
@@ -93,7 +93,7 @@ export function SettingsPanel({ settings, isDisabled = false, isEmbedded = false
             onChange={(event) => update({ showAiSummaryByDefault: event.target.checked })}
           />
         </label>
-        <label className="rounded-md bg-[#f6f7f8] p-3">
+        <label className="rounded-md bg-[var(--cc-subtle)] p-3">
           <span>
             <strong className="block">Review mode</strong>
             <small className={muted}>Choose manual or automatic guidance</small>
@@ -105,7 +105,7 @@ export function SettingsPanel({ settings, isDisabled = false, isEmbedded = false
             onChange={(classificationMode) => update({ classificationMode })}
           />
         </label>
-        <label className="rounded-md bg-[#f6f7f8] p-3">
+        <label className="rounded-md bg-[var(--cc-subtle)] p-3">
           <span>
             <strong className="block">Second-opinion threshold</strong>
             <small className={muted}>0-100 moderation sensitivity</small>
@@ -122,7 +122,7 @@ export function SettingsPanel({ settings, isDisabled = false, isEmbedded = false
         </label>
       </div>
       <div className="mt-4 flex items-center justify-between gap-3 max-[720px]:block">
-        <p className={thresholdIsValid ? muted : "text-sm font-semibold text-[#b42318]"}>
+        <p className={thresholdIsValid ? muted : "text-sm font-semibold text-[var(--cc-danger-text)]"}>
           {thresholdIsValid
             ? "Review changes, then save them for this subreddit workspace."
             : "Second-opinion threshold must be between 0 and 100."}

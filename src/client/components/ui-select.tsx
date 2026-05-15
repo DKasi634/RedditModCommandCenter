@@ -61,7 +61,7 @@ export function UiSelect<TValue extends string>({
       </button>
       {isOpen ? (
         <div
-          className="absolute left-0 top-[calc(100%+5px)] z-20 w-full overflow-hidden rounded-[14px] border border-[#e5ebee] bg-white p-1 shadow-[0_12px_28px_rgba(28,28,28,0.14)]"
+          className="absolute left-0 top-[calc(100%+5px)] z-20 w-full overflow-hidden rounded-[14px] border border-[var(--cc-border)] bg-[var(--cc-panel)] p-1 shadow-[0_12px_28px_rgba(28,28,28,0.14)]"
           role="listbox"
         >
           {options.map((option) => (
@@ -69,8 +69,8 @@ export function UiSelect<TValue extends string>({
               key={option.value}
               type="button"
               className={cn(
-                "flex min-h-8 w-full items-center justify-between rounded-[10px] border-0 bg-transparent px-2 py-1.5 text-left text-sm font-semibold text-[#1c1c1c] transition hover:bg-[#f6f7f8]",
-                option.value === value && "bg-[#fff1eb]",
+                "flex min-h-8 w-full items-center justify-between rounded-[10px] border-0 bg-transparent px-2 py-1.5 text-left text-sm font-semibold text-[var(--cc-text)] transition hover:bg-[var(--cc-subtle)]",
+                option.value === value && "bg-[var(--cc-accent-soft)]",
               )}
               role="option"
               aria-selected={option.value === value}

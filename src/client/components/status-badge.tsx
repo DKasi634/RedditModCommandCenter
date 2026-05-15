@@ -16,12 +16,12 @@ export function StatusBadge({ status }: { status: WorkflowStatus }) {
     <span
       className={cn(
         "inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-bold capitalize leading-none",
-        status === "resolved" && "border-[#abefc6] bg-[#dcfae6] text-[#027a48]",
-        status === "needs_second_opinion" && "border-[#fedf89] bg-[#fef0c7] text-[#b54708]",
-        status === "likely_remove" && "border-[#fecdca] bg-[#fee4e2] text-[#b42318]",
-        status === "likely_approve" && "border-[#abefc6] bg-[#dcfae6] text-[#027a48]",
+        status === "resolved" && "border-[var(--cc-success-border)] bg-[var(--cc-success-bg)] text-[var(--cc-success-text)]",
+        status === "needs_second_opinion" && "border-[var(--cc-warning-border)] bg-[var(--cc-warning-bg)] text-[var(--cc-warning-text)]",
+        status === "likely_remove" && "border-[var(--cc-danger-border)] bg-[var(--cc-danger-bg)] text-[var(--cc-danger-text)]",
+        status === "likely_approve" && "border-[var(--cc-success-border)] bg-[var(--cc-success-bg)] text-[var(--cc-success-text)]",
         !["resolved", "needs_second_opinion", "likely_remove", "likely_approve"].includes(status) &&
-          "border-[#e3e8ef] bg-[#eef2f6] text-[#475467]",
+          "border-[var(--cc-border)] bg-[var(--cc-chip)] text-[var(--cc-muted-strong)]",
       )}
     >
       {statusLabels[status]}
@@ -34,10 +34,10 @@ export function RiskBadge({ riskLevel }: { riskLevel?: RiskLevel | undefined }) 
     <span
       className={cn(
         "inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-bold capitalize leading-none",
-        riskLevel === "high" && "border-[#fecdca] bg-[#fee4e2] text-[#b42318]",
-        riskLevel === "medium" && "border-[#fedf89] bg-[#fef0c7] text-[#b54708]",
-        riskLevel === "low" && "border-[#abefc6] bg-[#dcfae6] text-[#027a48]",
-        !riskLevel && "border-[#e3e8ef] bg-[#eef2f6] text-[#475467]",
+        riskLevel === "high" && "border-[var(--cc-danger-border)] bg-[var(--cc-danger-bg)] text-[var(--cc-danger-text)]",
+        riskLevel === "medium" && "border-[var(--cc-warning-border)] bg-[var(--cc-warning-bg)] text-[var(--cc-warning-text)]",
+        riskLevel === "low" && "border-[var(--cc-success-border)] bg-[var(--cc-success-bg)] text-[var(--cc-success-text)]",
+        !riskLevel && "border-[var(--cc-border)] bg-[var(--cc-chip)] text-[var(--cc-muted-strong)]",
       )}
     >
       {riskLevel ?? "no signal"}
