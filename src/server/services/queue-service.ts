@@ -8,6 +8,7 @@ import { getUserHistory } from "../repositories/user-history-repository";
 import { getSettings } from "../repositories/settings-repository";
 import { saveClassification } from "../repositories/classification-repository";
 import { saveStatus } from "../repositories/status-repository";
+import { getModeratorWorkspaceContext } from "./moderator-service";
 import { calculateTriageScore } from "./triage-score-service";
 
 function classificationState(
@@ -51,7 +52,11 @@ async function autoClassifyIfNeeded(
 }
 
 export async function getQueueView() {
-  const [items, settings] = await Promise.all([fetchModerationQueue(), getSettings()]);
+  const [items, settings, moderator] = await Promise.all([
+    fetchModerationQueue(),
+    getSettings(),
+    getModeratorWorkspaceContext(),
+  ]);
 
   const viewItems: QueueViewItem[] = await Promise.all(
     items.map(async (item) => {
@@ -86,5 +91,5 @@ export async function getQueueView() {
     })
   );
 
-  return { items: viewItems, settings };
+  return { items: viewItems, settings, moderator };
 }

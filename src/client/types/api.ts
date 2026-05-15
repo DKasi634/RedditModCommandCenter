@@ -1,5 +1,6 @@
 import type {
   ClassificationResult,
+  ModeratorWorkspaceContext,
   ModeratorDecision,
   QueueViewItem,
   SubredditSettings,
@@ -9,6 +10,7 @@ import type {
 export type QueueResponse = {
   items: QueueViewItem[];
   settings: SubredditSettings;
+  moderator: ModeratorWorkspaceContext;
 };
 
 export type ClassifyResponse = {

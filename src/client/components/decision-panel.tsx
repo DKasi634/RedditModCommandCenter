@@ -43,6 +43,8 @@ type Props = {
   isAnalyzing?: boolean;
   aiEnabled?: boolean;
   isEmbedded?: boolean;
+  canEscalate?: boolean;
+  currentModeratorUsername?: string;
   onStatusChange: (status: WorkflowStatus) => Promise<void>;
   onClassify: () => Promise<void>;
   onDecision: (decision: Omit<ModeratorDecision, "decidedAt" | "moderatorUsername">) => Promise<void>;
@@ -54,6 +56,8 @@ export function DecisionPanel({
   isAnalyzing = false,
   aiEnabled = true,
   isEmbedded = false,
+  canEscalate = true,
+  currentModeratorUsername,
   onStatusChange,
   onClassify,
   onDecision,
@@ -65,6 +69,11 @@ export function DecisionPanel({
   const [isSaving, setIsSaving] = useState(false);
   const isBusy = isDisabled || isSaving;
   const analyzeLabel = item.classification ? "Reanalyze with AI" : "Analyze with AI";
+  const isOwnOpenEscalation = item.secondOpinion?.status === "open" &&
+    currentModeratorUsername !== undefined &&
+    item.secondOpinion.escalatedBy.toLowerCase() === currentModeratorUsername.toLowerCase();
+  const finalActionDisabled = isBusy || isOwnOpenEscalation;
+  const escalateDisabled = isBusy || !canEscalate || item.secondOpinion?.status === "open";
 
   async function saveDecision(
     finalAction: ModeratorDecision["finalAction"],
@@ -113,7 +122,7 @@ export function DecisionPanel({
           Workflow status
           <UiSelect
             value={item.status}
-            disabled={isBusy}
+            disabled={isBusy || isOwnOpenEscalation}
             options={statusOptions}
             onChange={(status) => void onStatusChange(status)}
           />
@@ -156,7 +165,7 @@ export function DecisionPanel({
           </label>
           <div className="button-row">
             <button
-              disabled={isBusy}
+              disabled={isBusy || !canEscalate}
               onClick={() => void saveDecision("escalated", { secondOpinionReason })}
             >
               <Flag size={16} /> Confirm escalation
@@ -168,10 +177,16 @@ export function DecisionPanel({
         </div>
       ) : null}
       {!aiEnabled ? <p className="muted action-status">AI analysis is disabled in settings.</p> : null}
+      {!canEscalate ? (
+        <p className="muted action-status">Escalation is unavailable because this subreddit has no other moderators.</p>
+      ) : null}
+      {isOwnOpenEscalation ? (
+        <p className="muted action-status">Another moderator must resolve this escalation.</p>
+      ) : null}
       <div className="button-row">
-        <button disabled={isBusy} onClick={() => void saveDecision("approved")}><Archive size={16} /> Archive</button>
-        <button disabled={isBusy} onClick={() => void saveDecision("removed")}><X size={16} /> Remove</button>
-        <button disabled={isBusy} onClick={() => setIsEscalating(true)}><Flag size={16} /> Escalate</button>
+        <button disabled={finalActionDisabled} onClick={() => void saveDecision("approved")}><Archive size={16} /> Archive</button>
+        <button disabled={finalActionDisabled} onClick={() => void saveDecision("removed")}><X size={16} /> Remove</button>
+        <button disabled={escalateDisabled} onClick={() => setIsEscalating(true)}><Flag size={16} /> Escalate</button>
       </div>
       {isBusy ? <p className="muted action-status">Working...</p> : null}
     </section>

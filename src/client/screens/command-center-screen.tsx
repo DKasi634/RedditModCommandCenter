@@ -244,6 +244,8 @@ export function CommandCenterScreen() {
                     isDisabled={isBusy}
                     isAnalyzing={analyzingThingId === selected.thingId}
                     aiEnabled={data.settings.aiEnabled}
+                    canEscalate={data.moderator.canEscalate}
+                    currentModeratorUsername={data.moderator.currentModeratorUsername}
                     isEmbedded
                     onClassify={() => analyzeSelected(selected.thingId)}
                     onStatusChange={(status: WorkflowStatus) => withRefresh(() => updateStatus({ thingId: selected.thingId, status }))}

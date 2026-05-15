@@ -2,7 +2,8 @@ import { Hono } from "hono";
 import type { ModeratorDecision } from "../../shared/domain";
 import { decisionRequestSchema } from "../schemas/decision.schema";
 import { recordModeratorDecision } from "../services/decision-service";
-import { getCurrentModeratorUsername, requireModerator } from "../middleware/moderator-auth";
+import { requireModerator } from "../middleware/moderator-auth";
+import { getCurrentModeratorUsername } from "../services/moderator-service";
 
 export const decisionRoutes = new Hono();
 

@@ -118,6 +118,12 @@ export type SecondOpinionRecord = {
   resolvedAt?: string;
 };
 
+export type ModeratorWorkspaceContext = {
+  currentModeratorUsername: string;
+  moderatorCount: number;
+  canEscalate: boolean;
+};
+
 export type SubredditSettings = {
   aiEnabled: boolean;
   classificationMode: "manual" | "auto_on_load";

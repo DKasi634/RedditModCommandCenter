@@ -25,7 +25,3 @@ export const requireModerator: MiddlewareHandler = async (c, next) => {
 
   await next();
 };
-
-export async function getCurrentModeratorUsername() {
-  return context.username ?? (await reddit.getCurrentUsername()) ?? "unknown_moderator";
-}
