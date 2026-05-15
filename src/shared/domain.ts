@@ -138,6 +138,7 @@ export type SubredditSettings = {
 export type QueueViewItem = QueueItem & {
   classification?: ClassificationResult;
   classificationState: ClassificationState;
+  latestDecision?: ModeratorDecision;
   status: WorkflowStatus;
   triageScore: number;
   userHistory: UserHistory;

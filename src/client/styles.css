@@ -444,6 +444,39 @@ h3 {
   grid-column: 1 / -1;
 }
 
+.decision-history-panel {
+  grid-column: 1 / -1;
+}
+
+.decision-history-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0;
+}
+
+.decision-history-list div {
+  min-width: 0;
+  border-radius: 6px;
+  padding: 10px 12px;
+  background: var(--surface);
+}
+
+.decision-history-list dt {
+  margin-bottom: 3px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.decision-history-list dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 650;
+}
+
 .operations-panel {
   grid-column: 1 / -1;
   padding: 10px 0 0;
@@ -987,6 +1020,10 @@ button.compact {
   }
 
   .decision-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .decision-history-list {
     grid-template-columns: 1fr;
   }
 

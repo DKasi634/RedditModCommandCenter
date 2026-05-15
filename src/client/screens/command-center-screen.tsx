@@ -6,6 +6,7 @@ import { updateStatus } from "../api/queue-api";
 import { saveSubredditSettings } from "../api/settings-api";
 import { AiSignalPanel } from "../components/ai-signal-panel";
 import { DecisionPanel } from "../components/decision-panel";
+import { DecisionHistoryPanel } from "../components/decision-history-panel";
 import { type QueueFilterMode, QueueList } from "../components/queue-list";
 import { SettingsPanel } from "../components/settings-panel";
 import { UserHistoryPanel } from "../components/user-history-panel";
@@ -254,6 +255,7 @@ export function CommandCenterScreen() {
                 showSummaryByDefault={data.settings.showAiSummaryByDefault}
               />
               <UserHistoryPanel history={selected.userHistory} />
+              <DecisionHistoryPanel decision={selected.latestDecision} />
               <section className="panel operations-panel">
                 <div className="tabs" role="tablist" aria-label="Moderator workspace">
                   <button

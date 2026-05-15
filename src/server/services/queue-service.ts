@@ -2,6 +2,7 @@ import type { ClassificationResult, ClassificationState, QueueViewItem, QueueIte
 import { fetchModerationQueue } from "../integrations/reddit-client";
 import { requestClassification } from "../integrations/ai-backend-client";
 import { getClassification } from "../repositories/classification-repository";
+import { getDecision } from "../repositories/decision-repository";
 import { getStatus } from "../repositories/status-repository";
 import { getSecondOpinion } from "../repositories/second-opinion-repository";
 import { getUserHistory } from "../repositories/user-history-repository";
@@ -60,8 +61,9 @@ export async function getQueueView() {
 
   const viewItems: QueueViewItem[] = await Promise.all(
     items.map(async (item) => {
-      const [storedClassification, status, userHistory, secondOpinion] = await Promise.all([
+      const [storedClassification, latestDecision, status, userHistory, secondOpinion] = await Promise.all([
         getClassification(item.thingId),
+        getDecision(item.thingId),
         getStatus(item.thingId),
         getUserHistory(item.authorUsername ?? "unknown"),
         getSecondOpinion(item.thingId)
@@ -83,6 +85,7 @@ export async function getQueueView() {
         ...item,
         classification,
         classificationState: classificationState(classification, settings.aiEnabled),
+        latestDecision,
         status: viewStatus,
         userHistory,
         secondOpinion,
