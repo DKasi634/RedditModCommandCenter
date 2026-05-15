@@ -3,13 +3,22 @@ import { type QueueSortMode, sortQueueItems } from "../utils/sort-queue-items";
 import { QueueCard } from "./queue-card";
 import { UiSelect } from "./ui-select";
 
-export type QueueFilterMode = "active" | "all" | "resolved" | "escalated" | "high_risk";
+export type QueueFilterMode =
+  | "active"
+  | "all"
+  | "resolved"
+  | "second_opinion"
+  | "requested_by_me"
+  | "resolved_second_opinions"
+  | "high_risk";
 
 const filterOptions: Array<{ label: string; value: QueueFilterMode }> = [
   { label: "Active", value: "active" },
   { label: "All", value: "all" },
   { label: "Resolved", value: "resolved" },
-  { label: "Escalated", value: "escalated" },
+  { label: "Needs second opinion", value: "second_opinion" },
+  { label: "Requested by me", value: "requested_by_me" },
+  { label: "Resolved second opinions", value: "resolved_second_opinions" },
   { label: "High risk", value: "high_risk" },
 ];
 

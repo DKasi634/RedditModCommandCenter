@@ -15,7 +15,7 @@ export async function recordModeratorDecision(decision: ModeratorDecision) {
       secondOpinion?.status === "open" &&
       secondOpinion.escalatedBy.toLowerCase() === decision.moderatorUsername.toLowerCase()
     ) {
-      throw new Error("A moderator cannot resolve their own escalation.");
+      throw new Error("Another moderator must resolve this second-opinion request.");
     }
 
     await applyRedditModerationDecision(decision.thingId, decision.finalAction);
@@ -27,7 +27,7 @@ export async function recordModeratorDecision(decision: ModeratorDecision) {
     const moderator = await getModeratorWorkspaceContext();
 
     if (!moderator.canEscalate) {
-      throw new Error("Escalation requires another moderator in this subreddit.");
+      throw new Error("Second opinion requires another eligible moderator in this subreddit.");
     }
 
     await saveStatus(decision.thingId, "needs_second_opinion");

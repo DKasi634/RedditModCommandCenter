@@ -24,7 +24,7 @@ queueRoutes.post("/status", async (c) => {
     secondOpinion?.status === "open" &&
     secondOpinion.escalatedBy.toLowerCase() === username.toLowerCase()
   ) {
-    return c.json({ error: "A moderator cannot resolve their own escalation." }, 400);
+    return c.json({ error: "Another moderator must resolve this second-opinion request." }, 400);
   }
 
   await saveStatus(request.thingId, request.status);

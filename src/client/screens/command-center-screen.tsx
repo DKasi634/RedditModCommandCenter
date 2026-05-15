@@ -21,6 +21,23 @@ const secondOpinionReasonLabels: Record<SecondOpinionReason, string> = {
   other: "Other",
 };
 
+function relativeTime(value: string) {
+  const timestamp = new Date(value).getTime();
+  const elapsedSeconds = Number.isFinite(timestamp)
+    ? Math.max(0, Math.floor((Date.now() - timestamp) / 1000))
+    : 0;
+
+  if (elapsedSeconds < 60) return "just now";
+
+  const elapsedMinutes = Math.floor(elapsedSeconds / 60);
+  if (elapsedMinutes < 60) return `${elapsedMinutes}m ago`;
+
+  const elapsedHours = Math.floor(elapsedMinutes / 60);
+  if (elapsedHours < 24) return `${elapsedHours}h ago`;
+
+  return `${Math.floor(elapsedHours / 24)}d ago`;
+}
+
 export function CommandCenterScreen() {
   const { data, error, isLoading, refresh } = useQueueItems();
   const [selectedThingId, setSelectedThingId] = useState<string | undefined>();
@@ -49,8 +66,21 @@ export function CommandCenterScreen() {
       return items.filter((item) => item.status === "resolved");
     }
 
-    if (filterMode === "escalated") {
+    if (filterMode === "second_opinion") {
       return items.filter((item) => item.status === "needs_second_opinion");
+    }
+
+    if (filterMode === "requested_by_me") {
+      const currentModerator = data?.moderator.currentModeratorUsername.toLowerCase();
+      return items.filter(
+        (item) =>
+          item.secondOpinion?.status === "open" &&
+          item.secondOpinion.escalatedBy.toLowerCase() === currentModerator,
+      );
+    }
+
+    if (filterMode === "resolved_second_opinions") {
+      return items.filter((item) => item.secondOpinion?.status === "resolved");
     }
 
     if (filterMode === "high_risk") {
@@ -58,7 +88,7 @@ export function CommandCenterScreen() {
     }
 
     return resolvedVisible ? items : activeItems;
-  }, [activeItems, data?.items, filterMode, resolvedVisible]);
+  }, [activeItems, data?.items, data?.moderator.currentModeratorUsername, filterMode, resolvedVisible]);
 
   const selected = useMemo(() => {
     if (!visibleItems.length) return undefined;
@@ -120,7 +150,7 @@ export function CommandCenterScreen() {
         <div className="summary-strip">
           <span>{activeItems.length} active</span>
           <span>{resolvedCount} resolved</span>
-          <span>{data?.items.filter((item) => item.status === "needs_second_opinion").length ?? 0} escalated</span>
+          <span>{data?.items.filter((item) => item.status === "needs_second_opinion").length ?? 0} second opinion</span>
           <span>AI {data?.settings.aiEnabled ? "enabled" : "disabled"}</span>
         </div>
       </header>
@@ -199,13 +229,20 @@ export function CommandCenterScreen() {
               {selected.secondOpinion ? (
                 <div className="second-opinion-summary">
                   <strong>
-                    {selected.secondOpinion.status === "open" ? "Escalated for review" : "Escalation resolved"}
+                    {selected.secondOpinion.status === "open" ? "Second opinion requested" : "Second opinion resolved"}
                   </strong>
                   <span>{secondOpinionReasonLabels[selected.secondOpinion.reason]}</span>
                   <span>
-                    Escalated by u/{selected.secondOpinion.escalatedBy}
-                    {selected.secondOpinion.resolvedBy ? ` · Resolved by u/${selected.secondOpinion.resolvedBy}` : ""}
+                    Requested by u/{selected.secondOpinion.escalatedBy} {relativeTime(selected.secondOpinion.escalatedAt)}
                   </span>
+                  {selected.secondOpinion.resolvedBy ? (
+                    <span>
+                      Resolved by u/{selected.secondOpinion.resolvedBy}
+                      {selected.secondOpinion.resolvedAt ? ` ${relativeTime(selected.secondOpinion.resolvedAt)}` : ""}
+                    </span>
+                  ) : (
+                    <span>Waiting for another moderator to review this item.</span>
+                  )}
                   {selected.secondOpinion.note ? <p>{selected.secondOpinion.note}</p> : null}
                 </div>
               ) : null}

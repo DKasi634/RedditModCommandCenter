@@ -3,7 +3,7 @@ import type { QueueViewItem, SecondOpinionReason } from "../../shared/domain";
 import { RiskBadge, StatusBadge } from "./status-badge";
 
 const secondOpinionReasonLabels: Record<SecondOpinionReason, string> = {
-  senior_mod_review: "Senior mod review",
+  senior_mod_review: "Another moderator requested",
   rule_ambiguity: "Rule ambiguity",
   policy_question: "Policy question",
   context_unclear: "Context unclear",

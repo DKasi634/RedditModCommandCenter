@@ -30,7 +30,7 @@ const aiFeedbackOptions: Array<{ label: string; value: AiFeedback }> = [
 ];
 
 const secondOpinionReasonOptions: Array<{ label: string; value: SecondOpinionReason }> = [
-  { label: "Needs senior mod", value: "senior_mod_review" },
+  { label: "Needs another moderator", value: "senior_mod_review" },
   { label: "Rule ambiguity", value: "rule_ambiguity" },
   { label: "Possible policy issue", value: "policy_question" },
   { label: "Context unclear", value: "context_unclear" },
@@ -73,7 +73,7 @@ export function DecisionPanel({
     currentModeratorUsername !== undefined &&
     item.secondOpinion.escalatedBy.toLowerCase() === currentModeratorUsername.toLowerCase();
   const finalActionDisabled = isBusy || isOwnOpenEscalation;
-  const escalateDisabled = isBusy || !canEscalate || item.secondOpinion?.status === "open";
+  const requestSecondOpinionDisabled = isBusy || !canEscalate || item.secondOpinion?.status === "open";
 
   async function saveDecision(
     finalAction: ModeratorDecision["finalAction"],
@@ -151,8 +151,8 @@ export function DecisionPanel({
       {isEscalating ? (
         <div className="second-opinion-form">
           <div>
-            <h3>Escalate for review</h3>
-            <p className="muted">Send this item for another moderator to review before a final action.</p>
+            <h3>Request second opinion</h3>
+            <p className="muted">Ask another moderator to review this item before a final action is taken.</p>
           </div>
           <label>
             Reason
@@ -168,7 +168,7 @@ export function DecisionPanel({
               disabled={isBusy || !canEscalate}
               onClick={() => void saveDecision("escalated", { secondOpinionReason })}
             >
-              <Flag size={16} /> Confirm escalation
+              <Flag size={16} /> Send request
             </button>
             <button className="secondary" disabled={isBusy} onClick={() => setIsEscalating(false)}>
               Cancel
@@ -178,15 +178,15 @@ export function DecisionPanel({
       ) : null}
       {!aiEnabled ? <p className="muted action-status">AI analysis is disabled in settings.</p> : null}
       {!canEscalate ? (
-        <p className="muted action-status">Escalation is unavailable because this subreddit has no other moderators.</p>
+        <p className="muted action-status">No other moderators are available for second opinion.</p>
       ) : null}
       {isOwnOpenEscalation ? (
-        <p className="muted action-status">Another moderator must resolve this escalation.</p>
+        <p className="muted action-status">Waiting for another moderator to resolve this second-opinion request.</p>
       ) : null}
       <div className="button-row">
         <button disabled={finalActionDisabled} onClick={() => void saveDecision("approved")}><Archive size={16} /> Archive</button>
         <button disabled={finalActionDisabled} onClick={() => void saveDecision("removed")}><X size={16} /> Remove</button>
-        <button disabled={escalateDisabled} onClick={() => setIsEscalating(true)}><Flag size={16} /> Escalate</button>
+        <button disabled={requestSecondOpinionDisabled} onClick={() => setIsEscalating(true)}><Flag size={16} /> Request opinion</button>
       </div>
       {isBusy ? <p className="muted action-status">Working...</p> : null}
     </section>
