@@ -1,5 +1,6 @@
 import type { QueueViewItem } from "../../shared/domain";
 import { type QueueSortMode, sortQueueItems } from "../utils/sort-queue-items";
+import { buttonSecondary, buttonCompact } from "../lib/ui";
 import { QueueCard } from "./queue-card";
 import { UiSelect } from "./ui-select";
 
@@ -56,17 +57,17 @@ export function QueueList({
   onSortModeChange,
 }: Props) {
   return (
-    <aside className="queue-list">
-      <div className="queue-list-toolbar">
+    <aside className="border-r border-[#e5ebee] bg-white">
+      <div className="flex min-h-[58px] items-center justify-between gap-2 border-b border-[#e5ebee] px-4 py-3 text-sm font-bold text-[#1c1c1c]">
         <span>{showResolved ? "All items" : "Active items"}</span>
         {resolvedCount > 0 && onToggleResolved ? (
-          <button className="secondary compact" disabled={isDisabled} onClick={onToggleResolved}>
+          <button className={`${buttonSecondary} ${buttonCompact}`} disabled={isDisabled} onClick={onToggleResolved}>
             {showResolved ? "Hide resolved" : `Show ${resolvedCount} resolved`}
           </button>
         ) : null}
       </div>
-      <div className="queue-controls">
-        <label>
+      <div className="grid grid-cols-2 gap-2.5 border-b border-[#e5ebee] bg-white px-4 py-3">
+        <label className="mb-0 text-xs font-semibold text-[#576f76]">
           Filter
           <UiSelect
             value={filterMode}
@@ -75,7 +76,7 @@ export function QueueList({
             onChange={onFilterModeChange}
           />
         </label>
-        <label>
+        <label className="mb-0 text-xs font-semibold text-[#576f76]">
           Sort
           <UiSelect
             value={sortMode}

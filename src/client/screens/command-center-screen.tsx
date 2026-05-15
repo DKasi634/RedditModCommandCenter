@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from "react";
-import { RefreshCcw, Settings, ShieldAlert } from "lucide-react";
 import { classifyItem } from "../api/classification-api";
 import { recordDecision } from "../api/decision-api";
 import { updateStatus } from "../api/queue-api";
@@ -7,10 +6,13 @@ import { saveSubredditSettings } from "../api/settings-api";
 import { AiSignalPanel } from "../components/ai-signal-panel";
 import { DecisionPanel } from "../components/decision-panel";
 import { DecisionHistoryPanel } from "../components/decision-history-panel";
+import { Icon } from "../components/icon";
 import { type QueueFilterMode, QueueList } from "../components/queue-list";
 import { SettingsPanel } from "../components/settings-panel";
 import { UserHistoryPanel } from "../components/user-history-panel";
 import { useQueueItems } from "../hooks/use-queue-items";
+import { cn } from "../lib/cn";
+import { buttonCompact, buttonPrimary, buttonSecondary, eyebrow, muted, panel } from "../lib/ui";
 import type { QueueSortMode } from "../utils/sort-queue-items";
 import type { ModeratorDecision, SecondOpinionReason, SubredditSettings, WorkflowStatus } from "../../shared/domain";
 
@@ -162,63 +164,63 @@ export function CommandCenterScreen() {
   }
 
   if (error === "Moderator access is required.") {
-    return <main className="app-shell app-shell-hidden" aria-hidden="true" />;
+    return <main className="min-h-0 p-0" aria-hidden="true" />;
   }
 
   if (isLoading) {
     return (
-      <main className="app-shell">
+      <main className="mx-auto min-h-screen max-w-[1420px] px-4 py-3.5 text-[#1c1c1c]">
         <QueueWorkspaceSkeleton />
       </main>
     );
   }
 
   return (
-    <main className="app-shell">
-      <header className="topbar">
+    <main className="mx-auto min-h-screen max-w-[1420px] px-4 py-3.5 text-[#1c1c1c]">
+      <header className="flex items-center justify-between gap-4 rounded-md border border-[#e5ebee] bg-white px-5 py-4 max-[860px]:block">
         <div>
-          <p className="eyebrow">Moderator workspace</p>
-          <h1>Mod Queue Command Center</h1>
+          <p className={eyebrow}>Moderator workspace</p>
+          <h1 className="mb-0 text-[25px] font-bold leading-tight tracking-normal">Mod Queue Command Center</h1>
         </div>
-        <div className="topbar-actions">
-          <div className="summary-strip">
-            <span>{activeItems.length} active</span>
-            <span>{resolvedCount} resolved</span>
-            <span>{data?.items.filter((item) => item.status === "needs_second_opinion").length ?? 0} second opinion</span>
-            <span>Signals {data?.settings.aiEnabled ? "enabled" : "disabled"}</span>
+        <div className="flex flex-wrap items-center justify-end gap-2 max-[860px]:mt-3 max-[860px]:justify-start">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="inline-flex min-h-8 items-center rounded-full border border-[#e5ebee] bg-white px-2.5 py-1 text-sm font-semibold">{activeItems.length} active</span>
+            <span className="inline-flex min-h-8 items-center rounded-full border border-[#e5ebee] bg-white px-2.5 py-1 text-sm font-semibold">{resolvedCount} resolved</span>
+            <span className="inline-flex min-h-8 items-center rounded-full border border-[#e5ebee] bg-white px-2.5 py-1 text-sm font-semibold">{data?.items.filter((item) => item.status === "needs_second_opinion").length ?? 0} second opinion</span>
+            <span className="inline-flex min-h-8 items-center rounded-full border border-[#e5ebee] bg-white px-2.5 py-1 text-sm font-semibold">Signals {data?.settings.aiEnabled ? "enabled" : "disabled"}</span>
           </div>
-          <button className="secondary compact topbar-refresh" disabled={isBusy} onClick={() => void refresh()}>
-            <RefreshCcw size={14} /> Refresh
+          <button className={`${buttonSecondary} ${buttonCompact} min-h-8`} disabled={isBusy} onClick={() => void refresh()}>
+            <Icon name="refresh" size={14} /> Refresh
           </button>
         </div>
       </header>
 
       {error ? (
-        <section className="empty-state">
+        <section className="mt-3 flex items-center justify-between gap-4 rounded-md border border-[#e5ebee] bg-white p-6">
           <div>
-            <p className="eyebrow">Workspace unavailable</p>
-            <h2>Unable to load workspace</h2>
-            <p className="muted">{error}</p>
+            <p className={eyebrow}>Workspace unavailable</p>
+            <h2 className="mb-3 text-lg font-bold">Unable to load workspace</h2>
+            <p className={muted}>{error}</p>
           </div>
         </section>
       ) : null}
-      {actionError ? <p className="error">{actionError}</p> : null}
+      {actionError ? <p className="mt-3 rounded-md border border-[#fecdca] bg-[#fee4e2] px-4 py-3 text-sm font-semibold text-[#b42318]">{actionError}</p> : null}
 
       {data && !isLoading && !selected ? (
-        <section className="empty-state">
+        <section className="mt-3 flex items-center justify-between gap-4 rounded-md border border-[#e5ebee] bg-white p-6 max-[720px]:block">
           <div>
-            <p className="eyebrow">Live queue ready</p>
-            <h2>{emptyCopy.title}</h2>
-            <p className="muted">
+            <p className={eyebrow}>Live queue ready</p>
+            <h2 className="mb-3 text-lg font-bold">{emptyCopy.title}</h2>
+            <p className={muted}>
               {resolvedCount > 0 && !resolvedVisible
                 ? "Resolved items are hidden from the active queue."
                 : emptyCopy.description}
             </p>
           </div>
-          <div className="button-row">
+          <div className="flex flex-wrap gap-2 max-[720px]:mt-4">
             {resolvedCount > 0 ? (
               <button
-                className="secondary"
+                className={buttonSecondary}
                 disabled={isBusy}
                 onClick={() => {
                   const next = !resolvedVisible;
@@ -229,13 +231,13 @@ export function CommandCenterScreen() {
                 {resolvedVisible ? "Hide resolved" : "Show resolved"}
               </button>
             ) : null}
-            <button disabled={isBusy} onClick={() => void refresh()}>Refresh queue</button>
+            <button className={buttonPrimary} disabled={isBusy} onClick={() => void refresh()}>Refresh queue</button>
           </div>
         </section>
       ) : null}
 
       {data && selected ? (
-        <div className="workspace">
+        <div className="mt-3 grid grid-cols-[minmax(320px,360px)_1fr] overflow-hidden rounded-md border border-[#e5ebee] bg-white max-[860px]:block">
           <QueueList
             items={visibleItems}
             selectedThingId={selected.thingId}
@@ -256,36 +258,38 @@ export function CommandCenterScreen() {
             }}
             onSortModeChange={setSortMode}
           />
-          <section className="detail">
-            <article className="item-detail">
-              <p className="eyebrow">{selected.itemType} by u/{selected.authorUsername}</p>
-              <h2>{selected.title ?? "Queue item"}</h2>
-              <p>{selected.body}</p>
-              <div className="report-row">
-                {selected.reportReasons.map((reason) => <span key={reason}>{reason}</span>)}
+          <section className="bg-[#f7f9fa] p-5">
+            <article className={panel}>
+              <p className={eyebrow}>{selected.itemType} by u/{selected.authorUsername}</p>
+              <h2 className="mb-3 text-xl font-bold leading-snug text-[#1c1c1c]">{selected.title ?? "Queue item"}</h2>
+              <p className="mb-4 leading-relaxed">{selected.body}</p>
+              <div className="flex flex-wrap gap-2">
+                {selected.reportReasons.map((reason) => (
+                  <span className="inline-flex min-h-8 items-center rounded-full border border-[#e5ebee] bg-white px-2.5 py-1 text-sm font-semibold" key={reason}>{reason}</span>
+                ))}
               </div>
               {selected.secondOpinion ? (
-                <div className="second-opinion-summary">
+                <div className="mt-4 rounded-md border border-[#fed8c7] bg-[#fff7ed] px-4 py-3 text-sm text-[#4b5563]">
                   <strong>
                     {selected.secondOpinion.status === "open" ? "Second opinion requested" : "Second opinion resolved"}
                   </strong>
-                  <span>{secondOpinionReasonLabels[selected.secondOpinion.reason]}</span>
-                  <span>
+                  <span className="mt-1 block">{secondOpinionReasonLabels[selected.secondOpinion.reason]}</span>
+                  <span className="mt-1 block">
                     Requested by u/{selected.secondOpinion.escalatedBy} {relativeTime(selected.secondOpinion.escalatedAt)}
                   </span>
                   {selected.secondOpinion.resolvedBy ? (
-                    <span>
+                    <span className="mt-1 block">
                       Resolved by u/{selected.secondOpinion.resolvedBy}
                       {selected.secondOpinion.resolvedAt ? ` ${relativeTime(selected.secondOpinion.resolvedAt)}` : ""}
                     </span>
                   ) : (
-                    <span>Waiting for another moderator to review this item.</span>
+                    <span className="mt-1 block">Waiting for another moderator to review this item.</span>
                   )}
                   {selected.secondOpinion.note ? <p>{selected.secondOpinion.note}</p> : null}
                 </div>
               ) : null}
             </article>
-            <div className="panel-grid">
+            <div className="mt-3 grid grid-cols-2 gap-3 max-[1120px]:grid-cols-1">
               <AiSignalPanel
                 classification={selected.classification}
                 state={analyzingThingId === selected.thingId ? "analyzing" : selected.classificationState}
@@ -293,27 +297,34 @@ export function CommandCenterScreen() {
               />
               <UserHistoryPanel history={selected.userHistory} />
               <DecisionHistoryPanel decision={selected.latestDecision} />
-              <section className="panel operations-panel">
-                <div className="tabs" role="tablist" aria-label="Moderator workspace">
+              <section className="col-span-2 rounded-md bg-transparent p-0 max-[1120px]:col-span-1">
+                <div className="flex gap-6 border-b border-[#e5ebee]" role="tablist" aria-label="Moderator workspace">
                   <button
                     role="tab"
                     type="button"
-                    className={operationsTab === "controls" ? "tab active" : "tab"}
+                    className={cn(
+                      "inline-flex min-h-11 items-center gap-2 border-0 border-b-[3px] border-transparent bg-transparent px-0 text-sm font-bold text-[#576f76] transition",
+                      operationsTab === "controls" && "border-[#ff4500] text-[#1c1c1c]",
+                    )}
                     aria-selected={operationsTab === "controls"}
                     onClick={() => setOperationsTab("controls")}
                   >
-                    <ShieldAlert size={16} /> Moderator controls
+                    <Icon name="shield" size={16} /> Moderator controls
                   </button>
                   <button
                     role="tab"
                     type="button"
-                    className={operationsTab === "settings" ? "tab active" : "tab"}
+                    className={cn(
+                      "inline-flex min-h-11 items-center gap-2 border-0 border-b-[3px] border-transparent bg-transparent px-0 text-sm font-bold text-[#576f76] transition",
+                      operationsTab === "settings" && "border-[#ff4500] text-[#1c1c1c]",
+                    )}
                     aria-selected={operationsTab === "settings"}
                     onClick={() => setOperationsTab("settings")}
                   >
-                    <Settings size={16} /> Moderator settings
+                    <Icon name="settings" size={16} /> Moderator settings
                   </button>
                 </div>
+                <div className="pt-5">
                 {operationsTab === "controls" ? (
                   <DecisionPanel
                     item={selected}
@@ -332,6 +343,7 @@ export function CommandCenterScreen() {
                 ) : (
                   <SettingsPanel settings={data.settings} isDisabled={isBusy} isEmbedded onSave={saveSettings} />
                 )}
+                </div>
               </section>
             </div>
           </section>
@@ -343,51 +355,51 @@ export function CommandCenterScreen() {
 
 function QueueWorkspaceSkeleton() {
   return (
-    <div className="workspace skeleton-workspace" aria-label="Loading queue workspace" aria-busy="true">
-      <aside className="queue-list">
-        <div className="queue-list-toolbar">
-          <span className="skeleton-line short" />
-          <span className="skeleton-pill" />
+    <div className="mt-3 grid animate-pulse grid-cols-[minmax(320px,360px)_1fr] overflow-hidden rounded-md border border-[#e5ebee] bg-white max-[860px]:block" aria-label="Loading queue workspace" aria-busy="true">
+      <aside className="border-r border-[#e5ebee] bg-white">
+        <div className="flex min-h-[58px] items-center justify-between gap-2 border-b border-[#e5ebee] px-4 py-3">
+          <span className="h-3 w-24 rounded-full bg-[#edf1f5]" />
+          <span className="h-8 w-24 rounded-full bg-[#edf1f5]" />
         </div>
-        <div className="queue-controls">
-          <div className="skeleton-field" />
-          <div className="skeleton-field" />
+        <div className="grid grid-cols-2 gap-2.5 border-b border-[#e5ebee] px-4 py-3">
+          <div className="h-10 rounded-2xl bg-[#edf1f5]" />
+          <div className="h-10 rounded-2xl bg-[#edf1f5]" />
         </div>
         {[0, 1, 2].map((item) => (
-          <div className="queue-card skeleton-card" key={item}>
-            <span className="skeleton-line tiny" />
-            <span className="skeleton-line medium" />
-            <span className="skeleton-line short" />
-            <span className="skeleton-pill" />
+          <div className="min-h-[120px] border-b border-[#e5ebee] px-4 py-3.5" key={item}>
+            <span className="mb-4 block h-3 w-14 rounded-full bg-[#edf1f5]" />
+            <span className="mb-3 block h-4 w-48 rounded-full bg-[#edf1f5]" />
+            <span className="mb-3 block h-3 w-32 rounded-full bg-[#edf1f5]" />
+            <span className="block h-7 w-20 rounded-full bg-[#edf1f5]" />
           </div>
         ))}
       </aside>
-      <section className="detail">
-        <article className="item-detail skeleton-detail">
-          <span className="skeleton-line short" />
-          <span className="skeleton-line title" />
-          <span className="skeleton-line wide" />
-          <span className="skeleton-pill" />
+      <section className="bg-[#f7f9fa] p-5">
+        <article className={panel}>
+          <span className="mb-4 block h-3 w-36 rounded-full bg-[#edf1f5]" />
+          <span className="mb-4 block h-6 w-2/3 rounded-full bg-[#edf1f5]" />
+          <span className="mb-4 block h-4 w-full rounded-full bg-[#edf1f5]" />
+          <span className="block h-8 w-20 rounded-full bg-[#edf1f5]" />
         </article>
-        <div className="panel-grid">
-          <section className="panel skeleton-panel">
-            <span className="skeleton-line medium" />
-            <div className="skeleton-metric-row">
-              <span />
-              <span />
-              <span />
+        <div className="mt-3 grid grid-cols-2 gap-3 max-[1120px]:grid-cols-1">
+          <section className={panel}>
+            <span className="mb-5 block h-5 w-36 rounded-full bg-[#edf1f5]" />
+            <div className="mb-5 grid grid-cols-3 gap-2.5">
+              <span className="h-20 rounded-md bg-[#edf1f5]" />
+              <span className="h-20 rounded-md bg-[#edf1f5]" />
+              <span className="h-20 rounded-md bg-[#edf1f5]" />
             </div>
-            <span className="skeleton-line wide" />
-            <span className="skeleton-line medium" />
+            <span className="mb-3 block h-4 w-full rounded-full bg-[#edf1f5]" />
+            <span className="block h-4 w-1/2 rounded-full bg-[#edf1f5]" />
           </section>
-          <section className="panel skeleton-panel">
-            <span className="skeleton-line medium" />
-            <div className="skeleton-metric-row">
-              <span />
-              <span />
-              <span />
+          <section className={panel}>
+            <span className="mb-5 block h-5 w-36 rounded-full bg-[#edf1f5]" />
+            <div className="mb-5 grid grid-cols-3 gap-2.5">
+              <span className="h-20 rounded-md bg-[#edf1f5]" />
+              <span className="h-20 rounded-md bg-[#edf1f5]" />
+              <span className="h-20 rounded-md bg-[#edf1f5]" />
             </div>
-            <span className="skeleton-line short" />
+            <span className="block h-4 w-1/2 rounded-full bg-[#edf1f5]" />
           </section>
         </div>
       </section>

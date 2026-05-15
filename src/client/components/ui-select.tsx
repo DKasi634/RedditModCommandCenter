@@ -1,5 +1,7 @@
-import { Check, ChevronDown } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { cn } from "../lib/cn";
+import { buttonSecondary } from "../lib/ui";
+import { Icon } from "./icon";
 
 type Option<TValue extends string> = {
   label: string;
@@ -46,24 +48,30 @@ export function UiSelect<TValue extends string>({
   }, []);
 
   return (
-    <div className="ui-select" ref={rootRef}>
+    <div className="relative w-full" ref={rootRef}>
       <button
         type="button"
-        className="ui-select-trigger"
+        className={cn(buttonSecondary, "h-10 w-full justify-between rounded-2xl px-3 text-left text-sm")}
         disabled={disabled}
         aria-expanded={isOpen}
         onClick={() => setIsOpen((open) => !open)}
       >
         <span>{selected?.label}</span>
-        <ChevronDown size={16} />
+        <Icon name="chevronDown" size={16} />
       </button>
       {isOpen ? (
-        <div className="ui-select-menu" role="listbox">
+        <div
+          className="absolute left-0 top-[calc(100%+5px)] z-20 w-full overflow-hidden rounded-[14px] border border-[#e5ebee] bg-white p-1 shadow-[0_12px_28px_rgba(28,28,28,0.14)]"
+          role="listbox"
+        >
           {options.map((option) => (
             <button
               key={option.value}
               type="button"
-              className={option.value === value ? "ui-select-option selected" : "ui-select-option"}
+              className={cn(
+                "flex min-h-8 w-full items-center justify-between rounded-[10px] border-0 bg-transparent px-2 py-1.5 text-left text-sm font-semibold text-[#1c1c1c] transition hover:bg-[#f6f7f8]",
+                option.value === value && "bg-[#fff1eb]",
+              )}
               role="option"
               aria-selected={option.value === value}
               onClick={() => {
@@ -72,7 +80,7 @@ export function UiSelect<TValue extends string>({
               }}
             >
               <span>{option.label}</span>
-              {option.value === value ? <Check size={15} /> : null}
+              {option.value === value ? <Icon name="check" size={15} /> : null}
             </button>
           ))}
         </div>

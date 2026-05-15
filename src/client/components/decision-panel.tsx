@@ -1,6 +1,7 @@
-import { Archive, CheckCircle2, Flag, RefreshCcw, ShieldAlert, X } from "lucide-react";
 import { useState } from "react";
 import type { ModeratorDecision, QueueViewItem, SecondOpinionReason, WorkflowStatus } from "../../shared/domain";
+import { buttonPrimary, buttonSecondary, field, muted, panel } from "../lib/ui";
+import { Icon } from "./icon";
 import { UiSelect } from "./ui-select";
 
 type AiFeedback = NonNullable<ModeratorDecision["aiFeedback"]>;
@@ -116,10 +117,10 @@ export function DecisionPanel({
   }
 
   return (
-    <section className={isEmbedded ? "tab-section decision-panel" : "panel decision-panel"}>
-      {!isEmbedded ? <h2><ShieldAlert size={18} /> Moderator controls</h2> : null}
-      <div className="decision-grid">
-        <label>
+    <section className={isEmbedded ? "" : panel}>
+      {!isEmbedded ? <h2 className="mb-4 flex items-center gap-2 text-lg font-bold text-[#1c1c1c]"><Icon name="shield" /> Moderator controls</h2> : null}
+      <div className="grid grid-cols-3 gap-3 max-[960px]:grid-cols-1">
+        <label className="text-sm font-bold">
           Workflow status
           <UiSelect
             value={item.status}
@@ -128,14 +129,14 @@ export function DecisionPanel({
             onChange={(status) => void onStatusChange(status)}
           />
         </label>
-        <div className="decision-ai-action">
-          <span className="field-label">Guided review</span>
-          <button className="secondary" disabled={isBusy || !aiEnabled} onClick={() => void onClassify()}>
-            <RefreshCcw className={isAnalyzing ? "spin-icon" : undefined} size={16} />
+        <div>
+          <span className="mb-1 block text-sm font-bold">Guided review</span>
+          <button className={`${buttonSecondary} h-10 w-full rounded-2xl`} disabled={isBusy || !aiEnabled} onClick={() => void onClassify()}>
+            <Icon name="refresh" size={16} className={isAnalyzing ? "animate-spin" : undefined} />
             {isAnalyzing ? "Reviewing..." : analyzeLabel}
           </button>
         </div>
-        <label>
+        <label className="text-sm font-bold">
           Signal feedback
           <UiSelect
             value={aiFeedback}
@@ -144,18 +145,24 @@ export function DecisionPanel({
             onChange={setAiFeedback}
           />
         </label>
-        <label className="note-field">
+        <label className="col-span-3 text-sm font-bold max-[960px]:col-span-1">
           Moderator note
-          <textarea value={note} disabled={isBusy} onChange={(event) => setNote(event.target.value)} rows={4} />
+          <textarea
+            className={`${field} min-h-[112px] resize-none rounded-2xl font-normal`}
+            value={note}
+            disabled={isBusy}
+            onChange={(event) => setNote(event.target.value)}
+            rows={4}
+          />
         </label>
       </div>
       {isEscalating ? (
-        <div className="second-opinion-form">
+        <div className="mt-4 rounded-md border border-[#fedf89] bg-[#fffaeb] p-4">
           <div>
-            <h3>Request second opinion</h3>
-            <p className="muted">Ask another moderator to review this item before a final action is taken.</p>
+            <h3 className="mb-1 text-sm font-bold">Request second opinion</h3>
+            <p className={muted}>Ask another moderator to review this item before a final action is taken.</p>
           </div>
-          <label>
+          <label className="mt-3 block text-sm font-bold">
             Reason
             <UiSelect
               value={secondOpinionReason}
@@ -164,41 +171,42 @@ export function DecisionPanel({
               onChange={setSecondOpinionReason}
             />
           </label>
-          <div className="button-row">
+          <div className="mt-3 flex flex-wrap gap-2">
             <button
+              className={buttonPrimary}
               disabled={isBusy || !canEscalate}
               onClick={() => void saveDecision("escalated", { secondOpinionReason })}
             >
-              <Flag size={16} /> Send request
+              <Icon name="flag" size={16} /> Send request
             </button>
-            <button className="secondary" disabled={isBusy} onClick={() => setIsEscalating(false)}>
+            <button className={buttonSecondary} disabled={isBusy} onClick={() => setIsEscalating(false)}>
               Cancel
             </button>
           </div>
         </div>
       ) : null}
-      {!aiEnabled ? <p className="muted action-status">Guided review is disabled in settings.</p> : null}
+      {!aiEnabled ? <p className={`mt-3 ${muted}`}>Guided review is disabled in settings.</p> : null}
       {!canEscalate ? (
-        <p className="muted action-status">No other moderators are available for second opinion.</p>
+        <p className={`mt-3 ${muted}`}>No other moderators are available for second opinion.</p>
       ) : null}
       {isOwnOpenEscalation ? (
-        <p className="muted action-status">Waiting for another moderator to resolve this second-opinion request.</p>
+        <p className={`mt-3 ${muted}`}>Waiting for another moderator to resolve this second-opinion request.</p>
       ) : null}
       {isResolvingSecondOpinion ? (
-        <div className="resolution-callout">
-          <CheckCircle2 size={16} />
+        <div className="mt-4 flex gap-2 rounded-md border border-[#abefc6] bg-[#ecfdf3] p-3 text-sm text-[#027a48]">
+          <Icon name="checkCircle" size={16} />
           <div>
             <strong>Resolving second opinion</strong>
-            <span>Archive or Remove will close the request from u/{item.secondOpinion?.escalatedBy} and record you as the resolving moderator.</span>
+            <span className="block">Archive or Remove will close the request from u/{item.secondOpinion?.escalatedBy} and record you as the resolving moderator.</span>
           </div>
         </div>
       ) : null}
-      <div className="button-row">
-        <button disabled={finalActionDisabled} onClick={() => void saveDecision("approved")}><Archive size={16} /> Archive</button>
-        <button disabled={finalActionDisabled} onClick={() => void saveDecision("removed")}><X size={16} /> Remove</button>
-        <button disabled={requestSecondOpinionDisabled} onClick={() => setIsEscalating(true)}><Flag size={16} /> Request opinion</button>
+      <div className="mt-4 flex flex-wrap gap-2">
+        <button className={buttonPrimary} disabled={finalActionDisabled} onClick={() => void saveDecision("approved")}><Icon name="archive" size={16} /> Archive</button>
+        <button className={buttonPrimary} disabled={finalActionDisabled} onClick={() => void saveDecision("removed")}><Icon name="x" size={16} /> Remove</button>
+        <button className={buttonPrimary} disabled={requestSecondOpinionDisabled} onClick={() => setIsEscalating(true)}><Icon name="flag" size={16} /> Request opinion</button>
       </div>
-      {isBusy ? <p className="muted action-status">Working...</p> : null}
+      {isBusy ? <p className={`mt-3 ${muted}`}>Working...</p> : null}
     </section>
   );
 }

@@ -1,6 +1,7 @@
-import { Settings } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import type { SubredditSettings } from "../../shared/domain";
+import { buttonPrimary, field, muted, panel } from "../lib/ui";
+import { Icon } from "./icon";
 import { UiSelect } from "./ui-select";
 
 type Props = {
@@ -48,18 +49,18 @@ export function SettingsPanel({ settings, isDisabled = false, isEmbedded = false
   }
 
   return (
-    <section className={isEmbedded ? "tab-section settings-panel" : "panel settings-panel"}>
+    <section className={isEmbedded ? "" : panel}>
       {!isEmbedded ? (
-        <div className="panel-heading">
-          <h2><Settings size={18} /> Moderator settings</h2>
-          <span className="model-pill">Subreddit workspace</span>
+        <div className="mb-4 flex items-center justify-between gap-3">
+          <h2 className="mb-0 flex items-center gap-2 text-lg font-bold text-[#1c1c1c]"><Icon name="settings" /> Moderator settings</h2>
+          <span className="inline-flex rounded-full border border-[#e3e8ef] bg-[#eef2f6] px-2 py-0.5 text-xs font-bold text-[#475467]">Subreddit workspace</span>
         </div>
       ) : null}
-      <div className="settings-grid">
-        <label className="setting-card toggle-row">
+      <div className="grid grid-cols-5 gap-3 max-[1180px]:grid-cols-2 max-[720px]:grid-cols-1">
+        <label className="flex min-h-[74px] items-center justify-between gap-3 rounded-md bg-[#f6f7f8] p-3">
           <span>
-            <strong>Guided review</strong>
-            <small>Enable Command Center review signals</small>
+            <strong className="block">Guided review</strong>
+            <small className={muted}>Enable Command Center review signals</small>
           </span>
           <input
             type="checkbox"
@@ -68,10 +69,10 @@ export function SettingsPanel({ settings, isDisabled = false, isEmbedded = false
             onChange={(event) => update({ aiEnabled: event.target.checked })}
           />
         </label>
-        <label className="setting-card toggle-row">
+        <label className="flex min-h-[74px] items-center justify-between gap-3 rounded-md bg-[#f6f7f8] p-3">
           <span>
-            <strong>Resolved default</strong>
-            <small>Open with resolved items visible</small>
+            <strong className="block">Resolved default</strong>
+            <small className={muted}>Open with resolved items visible</small>
           </span>
           <input
             type="checkbox"
@@ -80,10 +81,10 @@ export function SettingsPanel({ settings, isDisabled = false, isEmbedded = false
             onChange={(event) => update({ showResolvedByDefault: event.target.checked })}
           />
         </label>
-        <label className="setting-card toggle-row">
+        <label className="flex min-h-[74px] items-center justify-between gap-3 rounded-md bg-[#f6f7f8] p-3">
           <span>
-            <strong>Context notes</strong>
-            <small>Expand review notes by default</small>
+            <strong className="block">Context notes</strong>
+            <small className={muted}>Expand review notes by default</small>
           </span>
           <input
             type="checkbox"
@@ -92,10 +93,10 @@ export function SettingsPanel({ settings, isDisabled = false, isEmbedded = false
             onChange={(event) => update({ showAiSummaryByDefault: event.target.checked })}
           />
         </label>
-        <label className="setting-card setting-field">
+        <label className="rounded-md bg-[#f6f7f8] p-3">
           <span>
-            <strong>Review mode</strong>
-            <small>Choose manual or automatic guidance</small>
+            <strong className="block">Review mode</strong>
+            <small className={muted}>Choose manual or automatic guidance</small>
           </span>
           <UiSelect
             value={draft.classificationMode}
@@ -104,12 +105,13 @@ export function SettingsPanel({ settings, isDisabled = false, isEmbedded = false
             onChange={(classificationMode) => update({ classificationMode })}
           />
         </label>
-        <label className="setting-card setting-field">
+        <label className="rounded-md bg-[#f6f7f8] p-3">
           <span>
-            <strong>Second-opinion threshold</strong>
-            <small>0-100 moderation sensitivity</small>
+            <strong className="block">Second-opinion threshold</strong>
+            <small className={muted}>0-100 moderation sensitivity</small>
           </span>
           <input
+            className={`${field} mt-2`}
             type="number"
             min={0}
             max={100}
@@ -119,13 +121,13 @@ export function SettingsPanel({ settings, isDisabled = false, isEmbedded = false
           />
         </label>
       </div>
-      <div className="settings-save-row">
-        <p className={thresholdIsValid ? "muted" : "error-inline"}>
+      <div className="mt-4 flex items-center justify-between gap-3 max-[720px]:block">
+        <p className={thresholdIsValid ? muted : "text-sm font-semibold text-[#b42318]"}>
           {thresholdIsValid
             ? "Review changes, then save them for this subreddit workspace."
             : "Second-opinion threshold must be between 0 and 100."}
         </p>
-        <button disabled={isDisabled || !hasChanges || !thresholdIsValid} onClick={() => void saveDraft()}>
+        <button className={`${buttonPrimary} max-[720px]:mt-3`} disabled={isDisabled || !hasChanges || !thresholdIsValid} onClick={() => void saveDraft()}>
           Save settings
         </button>
       </div>

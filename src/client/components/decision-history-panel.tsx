@@ -1,5 +1,6 @@
-import { ClipboardCheck } from "lucide-react";
 import type { ModeratorDecision } from "../../shared/domain";
+import { panel, muted } from "../lib/ui";
+import { Icon } from "./icon";
 
 const actionLabels: Record<ModeratorDecision["finalAction"], string> = {
   approved: "Archived",
@@ -35,45 +36,45 @@ function formatDecisionTime(value: string) {
 export function DecisionHistoryPanel({ decision }: { decision: ModeratorDecision | undefined }) {
   if (!decision) {
     return (
-      <section className="panel decision-history-panel">
-        <h2><ClipboardCheck size={18} /> Decision history</h2>
-        <p className="muted">No app-tracked decision has been recorded for this item yet.</p>
+      <section className={panel}>
+        <h2 className="mb-3 flex items-center gap-2 text-lg font-bold text-[#1c1c1c]"><Icon name="clipboard" /> Decision history</h2>
+        <p className={muted}>No app-tracked decision has been recorded for this item yet.</p>
       </section>
     );
   }
 
   return (
-    <section className="panel decision-history-panel">
-      <div className="panel-heading">
-        <h2><ClipboardCheck size={18} /> Decision history</h2>
-        <span className="badge risk-none">{actionLabels[decision.finalAction]}</span>
+    <section className={panel}>
+      <div className="mb-4 flex items-center justify-between gap-3">
+        <h2 className="mb-0 flex items-center gap-2 text-lg font-bold text-[#1c1c1c]"><Icon name="clipboard" /> Decision history</h2>
+        <span className="inline-flex items-center rounded-full border border-[#e3e8ef] bg-[#eef2f6] px-2 py-0.5 text-xs font-bold text-[#475467]">{actionLabels[decision.finalAction]}</span>
       </div>
-      <dl className="decision-history-list">
-        <div>
-          <dt>Moderator</dt>
+      <dl className="grid grid-cols-2 gap-3 max-[720px]:grid-cols-1">
+        <div className="rounded-md bg-[#f6f7f8] p-3">
+          <dt className="text-xs font-bold text-[#576f76]">Moderator</dt>
           <dd>u/{decision.moderatorUsername}</dd>
         </div>
-        <div>
-          <dt>Recorded</dt>
+        <div className="rounded-md bg-[#f6f7f8] p-3">
+          <dt className="text-xs font-bold text-[#576f76]">Recorded</dt>
           <dd>{formatDecisionTime(decision.decidedAt)}</dd>
         </div>
-        <div>
-          <dt>Review snapshot</dt>
+        <div className="rounded-md bg-[#f6f7f8] p-3">
+          <dt className="text-xs font-bold text-[#576f76]">Review snapshot</dt>
           <dd>{decision.aiSnapshot ? "Saved with decision" : "Not used"}</dd>
         </div>
-        <div>
-          <dt>Signal feedback</dt>
+        <div className="rounded-md bg-[#f6f7f8] p-3">
+          <dt className="text-xs font-bold text-[#576f76]">Signal feedback</dt>
           <dd>{decision.aiFeedback ? feedbackLabels[decision.aiFeedback] : "Not recorded"}</dd>
         </div>
         {decision.selectedRuleTitle ? (
-          <div>
-            <dt>Selected rule</dt>
+          <div className="rounded-md bg-[#f6f7f8] p-3">
+            <dt className="text-xs font-bold text-[#576f76]">Selected rule</dt>
             <dd>{decision.selectedRuleTitle}</dd>
           </div>
         ) : null}
         {decision.note ? (
-          <div>
-            <dt>Moderator note</dt>
+          <div className="rounded-md bg-[#f6f7f8] p-3">
+            <dt className="text-xs font-bold text-[#576f76]">Moderator note</dt>
             <dd>{decision.note}</dd>
           </div>
         ) : null}
