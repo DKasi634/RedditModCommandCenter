@@ -21,6 +21,51 @@ import { testGeminiProvider } from "./integrations/ai-backend-client";
 
 const app = new Hono();
 
+function svgDataUri(svg: string) {
+  return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
+}
+
+const commandCenterIconUri = svgDataUri(`
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <rect width="256" height="256" rx="58" fill="#ff4500"/>
+  <path d="M72 78h112v26H72zM72 118h112v26H72zM72 158h70v26H72z" fill="#fff"/>
+  <path d="M174 159l14 14 30-36" fill="none" stroke="#fff" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>`);
+
+const commandCenterBackgroundUri = svgDataUri(`
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2048 1024">
+  <defs>
+    <radialGradient id="g" cx="50%" cy="42%" r="70%">
+      <stop offset="0" stop-color="#1f3442"/>
+      <stop offset=".58" stop-color="#0f1820"/>
+      <stop offset="1" stop-color="#090f14"/>
+    </radialGradient>
+  </defs>
+  <rect width="2048" height="1024" fill="url(#g)"/>
+  <g opacity=".17" fill="#dbe7ee">
+    <rect x="145" y="118" width="385" height="94" rx="47"/>
+    <rect x="590" y="118" width="250" height="94" rx="28"/>
+    <rect x="920" y="118" width="500" height="94" rx="47"/>
+    <rect x="1500" y="118" width="270" height="94" rx="47"/>
+    <rect x="180" y="276" width="310" height="260" rx="48"/>
+    <rect x="560" y="276" width="380" height="260" rx="48"/>
+    <rect x="1010" y="276" width="310" height="260" rx="48"/>
+    <rect x="1390" y="276" width="380" height="260" rx="48"/>
+    <rect x="145" y="614" width="460" height="96" rx="48"/>
+    <rect x="685" y="614" width="685" height="96" rx="48"/>
+    <rect x="1450" y="614" width="330" height="96" rx="48"/>
+  </g>
+  <g transform="translate(604 316)">
+    <rect width="840" height="280" rx="38" fill="#111c24" stroke="#314352" stroke-width="2"/>
+    <rect x="44" y="42" width="224" height="32" rx="16" fill="#ff4500"/>
+    <rect x="44" y="100" width="752" height="34" rx="17" fill="#dbe7ee" opacity=".72"/>
+    <rect x="44" y="162" width="330" height="74" rx="18" fill="#22313c"/>
+    <rect x="402" y="162" width="394" height="74" rx="18" fill="#22313c"/>
+    <circle cx="750" cy="67" r="18" fill="#86efac"/>
+  </g>
+  <path d="M0 0h2048v8H0z" fill="#ff4500" opacity=".85"/>
+</svg>`);
+
 async function createCommandCenterPost() {
   if (!context.subredditName) {
     throw new Error("No subreddit context is available for this menu action");
@@ -32,9 +77,11 @@ async function createCommandCenterPost() {
     entry: "default",
     splash: {
       appDisplayName: "Command Center",
+      appIconUri: commandCenterIconUri,
+      backgroundUri: commandCenterBackgroundUri,
       heading: "Mod Queue Command Center",
       description: "Prioritize queue items, review context, and record moderator decisions from one workspace.",
-      buttonLabel: "Open workspace",
+      buttonLabel: "Open Command Center",
     },
     styles: {
       backgroundColor: "#F7F9FAFF",
