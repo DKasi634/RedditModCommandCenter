@@ -1,4 +1,5 @@
 import type { UserHistory } from "../../shared/domain";
+import { cn } from "../lib/cn";
 import { panel, muted } from "../lib/ui";
 import { Icon } from "./icon";
 
@@ -15,7 +16,7 @@ export function UserHistoryPanel({ history }: { history: UserHistory }) {
     : "No prior app-tracked moderation action.";
 
   return (
-    <section className={panel}>
+    <section className={cn(panel, "max-[640px]:border-0 max-[640px]:bg-transparent max-[640px]:p-0")}>
       <h2 className="mb-4 flex items-center gap-2 text-lg font-bold text-[var(--cc-text)]"><Icon name="history" /> User history</h2>
       <div className="mb-3 grid grid-cols-4 gap-2.5 max-[720px]:grid-cols-2">
         <div className="rounded-md bg-[var(--cc-subtle)] p-3"><strong className="block text-xl">{history.previousWarnings}</strong><span className={muted}>Warnings</span></div>

@@ -14,7 +14,7 @@ export async function classifyQueueItem(thingId: string) {
   }
 
   if (!settings.aiEnabled) {
-    throw new Error("AI classification is disabled in settings");
+    throw new Error("Command Center insights are disabled in settings");
   }
 
   const history = await getUserHistory(item.authorUsername ?? "unknown");

@@ -8,7 +8,7 @@ export const buttonSecondary = `${buttonBase} border-[var(--cc-border-strong)] b
 export const buttonCompact = "min-h-8 px-2.5 py-1.5 text-xs";
 
 export const panel =
-  "rounded-md border border-[var(--cc-border)] bg-[var(--cc-panel)] p-4 shadow-none";
+  "rounded-md border border-[var(--cc-border)] bg-[var(--cc-panel)] p-4 shadow-none max-[640px]:p-3";
 
 export const eyebrow =
   "mb-2 text-xs font-bold uppercase tracking-[0.02em] text-[var(--cc-muted)]";

@@ -13,7 +13,7 @@ const actionLabels: Record<ClassificationResult["suggestedAction"], string> = {
 
 function analysisMetadata(classification: ClassificationResult, state: ClassificationState) {
   if (state === "fallback") {
-    return "Local review signal shown";
+    return "Local triage insight shown";
   }
 
   const createdAt = new Date(classification.createdAt).getTime();
@@ -48,8 +48,8 @@ export function AiSignalPanel({
   if (state === "disabled") {
     return (
       <section className={panel}>
-        <h2 className="mb-3 flex items-center gap-2 text-lg font-bold text-[var(--cc-text)]"><Icon name="brain" /> Review signal</h2>
-        <p className={muted}>Review signals are disabled for this workspace.</p>
+        <h2 className="mb-3 flex items-center gap-2 text-lg font-bold text-[var(--cc-text)]"><Icon name="brain" /> Triage insight</h2>
+        <p className={muted}>Triage insights are disabled for this workspace.</p>
       </section>
     );
   }
@@ -57,7 +57,7 @@ export function AiSignalPanel({
   if (state === "analyzing") {
     return (
       <section className={panel}>
-        <h2 className="mb-3 flex items-center gap-2 text-lg font-bold text-[var(--cc-text)]"><Icon name="brain" /> Review signal</h2>
+        <h2 className="mb-3 flex items-center gap-2 text-lg font-bold text-[var(--cc-text)]"><Icon name="brain" /> Triage insight</h2>
         <p className={muted}>Reading context and preparing guidance...</p>
       </section>
     );
@@ -66,8 +66,8 @@ export function AiSignalPanel({
   if (!classification) {
     return (
       <section className={panel}>
-        <h2 className="mb-3 flex items-center gap-2 text-lg font-bold text-[var(--cc-text)]"><Icon name="brain" /> Review signal</h2>
-        <p className={muted}>No review signal yet. Moderators can review manually or run a guided review.</p>
+        <h2 className="mb-3 flex items-center gap-2 text-lg font-bold text-[var(--cc-text)]"><Icon name="brain" /> Triage insight</h2>
+        <p className={muted}>No triage insight yet. Moderators can review manually or run an insight check.</p>
       </section>
     );
   }
@@ -78,7 +78,7 @@ export function AiSignalPanel({
   return (
     <section className={panel}>
       <div className="mb-4 flex items-center justify-between gap-3">
-        <h2 className="mb-0 flex items-center gap-2 text-lg font-bold text-[var(--cc-text)]"><Icon name="brain" /> Review signal</h2>
+        <h2 className="mb-0 flex items-center gap-2 text-lg font-bold text-[var(--cc-text)]"><Icon name="brain" /> Triage insight</h2>
         <span className="inline-flex max-w-[180px] items-center gap-1 truncate rounded-full border border-[var(--cc-accent-soft-border)] bg-[var(--cc-accent-soft)] px-2.5 py-1 text-xs font-bold text-[var(--cc-accent-strong)]">
           <Icon name="sparkles" size={14} /> <span className="truncate">Command Center</span>
         </span>
@@ -144,7 +144,7 @@ export function AiSignalPanel({
         </ul>
       </details>
       <p className={`mt-4 border-t border-[var(--cc-border)] pt-3 text-sm ${muted}`}>
-        Generated as moderator guidance. Final decisions stay with the mod team.
+        Suggested guidance. Final decisions stay with the mod team.
       </p>
     </section>
   );

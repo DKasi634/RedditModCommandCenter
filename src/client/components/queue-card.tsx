@@ -50,7 +50,7 @@ export function QueueCard({ item, isSelected, onSelect, isDisabled = false }: Pr
         <span className="inline-flex items-center gap-1 text-xs font-semibold text-[var(--cc-muted)]" title="Triage score">
           <Icon name="message" size={14} /> {item.triageScore}
         </span>
-        <span className="inline-flex items-center gap-1 text-xs font-semibold text-[var(--cc-muted)]" title="Signal confidence">
+        <span className="inline-flex items-center gap-1 text-xs font-semibold text-[var(--cc-muted)]" title="Insight confidence">
           <Icon name="brain" size={14} /> {aiLabel}
         </span>
       </div>

@@ -92,7 +92,7 @@ function requestLocalClassification(
       hasRepeatedHistory
         ? "The author has prior app-tracked moderation history."
         : "No repeat app-tracked moderation pattern was found.",
-      "The external AI backend was unavailable, so this result used the local fallback classifier.",
+      "The cloud review engine was unavailable, so this result used Command Center's local safety checks.",
     ],
     needsSecondOpinion: suggestedAction === "needs_second_opinion",
     modelProvider: "mock",

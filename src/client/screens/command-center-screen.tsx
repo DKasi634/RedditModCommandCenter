@@ -51,7 +51,7 @@ const emptyFilterCopy: Record<QueueFilterMode, { title: string; description: str
   },
   high_risk: {
     title: "No high-risk items",
-    description: "Items with stronger review signals will appear here after guided review runs.",
+    description: "Items with stronger triage insights will appear here after an insight check runs.",
   },
 };
 
@@ -187,7 +187,7 @@ export function CommandCenterScreen() {
             <span className="inline-flex h-8 items-center rounded-full border border-[var(--cc-border)] bg-[var(--cc-panel)] px-2.5 text-sm font-semibold">{activeItems.length} active</span>
             <span className="inline-flex h-8 items-center rounded-full border border-[var(--cc-border)] bg-[var(--cc-panel)] px-2.5 text-sm font-semibold">{resolvedCount} resolved</span>
             <span className="inline-flex h-8 items-center rounded-full border border-[var(--cc-border)] bg-[var(--cc-panel)] px-2.5 text-sm font-semibold">{data?.items.filter((item) => item.status === "needs_second_opinion").length ?? 0} second opinion</span>
-            <span className="inline-flex h-8 items-center rounded-full border border-[var(--cc-border)] bg-[var(--cc-panel)] px-2.5 text-sm font-semibold">Signals {data?.settings.aiEnabled ? "enabled" : "disabled"}</span>
+            <span className="inline-flex h-8 items-center rounded-full border border-[var(--cc-border)] bg-[var(--cc-panel)] px-2.5 text-sm font-semibold">Insights {data?.settings.aiEnabled ? "enabled" : "disabled"}</span>
           </div>
           <button className={`${buttonSecondary} h-8 px-2.5 py-0 text-sm`} disabled={isBusy} onClick={() => void refresh()}>
             <Icon name="refresh" size={14} /> Refresh
@@ -258,7 +258,7 @@ export function CommandCenterScreen() {
             }}
             onSortModeChange={setSortMode}
           />
-          <section className="bg-[var(--cc-canvas)] p-5">
+          <section className="bg-[var(--cc-canvas)] p-5 max-[640px]:p-3">
             <article className={panel}>
               <p className={eyebrow}>{selected.itemType} by u/{selected.authorUsername}</p>
               <h2 className="mb-3 text-xl font-bold leading-snug text-[var(--cc-text)]">{selected.title ?? "Queue item"}</h2>

@@ -1,4 +1,5 @@
 import type { ModeratorDecision } from "../../shared/domain";
+import { cn } from "../lib/cn";
 import { panel, muted } from "../lib/ui";
 import { Icon } from "./icon";
 
@@ -36,7 +37,7 @@ function formatDecisionTime(value: string) {
 export function DecisionHistoryPanel({ decision }: { decision: ModeratorDecision | undefined }) {
   if (!decision) {
     return (
-      <section className={panel}>
+      <section className={cn(panel, "max-[640px]:border-0 max-[640px]:bg-transparent max-[640px]:p-0")}>
         <h2 className="mb-3 flex items-center gap-2 text-lg font-bold text-[var(--cc-text)]"><Icon name="clipboard" /> Decision history</h2>
         <p className={muted}>No app-tracked decision has been recorded for this item yet.</p>
       </section>
@@ -44,7 +45,7 @@ export function DecisionHistoryPanel({ decision }: { decision: ModeratorDecision
   }
 
   return (
-    <section className={panel}>
+    <section className={cn(panel, "max-[640px]:border-0 max-[640px]:bg-transparent max-[640px]:p-0")}>
       <div className="mb-4 flex items-center justify-between gap-3">
         <h2 className="mb-0 flex items-center gap-2 text-lg font-bold text-[var(--cc-text)]"><Icon name="clipboard" /> Decision history</h2>
         <span className="inline-flex items-center rounded-full border border-[var(--cc-border)] bg-[var(--cc-chip)] px-2 py-0.5 text-xs font-bold text-[var(--cc-muted-strong)]">{actionLabels[decision.finalAction]}</span>
@@ -63,7 +64,7 @@ export function DecisionHistoryPanel({ decision }: { decision: ModeratorDecision
           <dd>{decision.aiSnapshot ? "Saved with decision" : "Not used"}</dd>
         </div>
         <div className="rounded-md bg-[var(--cc-subtle)] p-3">
-          <dt className="text-xs font-bold text-[var(--cc-muted)]">Signal feedback</dt>
+          <dt className="text-xs font-bold text-[var(--cc-muted)]">Insight feedback</dt>
           <dd>{decision.aiFeedback ? feedbackLabels[decision.aiFeedback] : "Not recorded"}</dd>
         </div>
         {decision.selectedRuleTitle ? (

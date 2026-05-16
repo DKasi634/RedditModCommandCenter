@@ -21,7 +21,7 @@
     "items": [
       {
         "label": "Open Mod Queue Command Center",
-        "description": "Review queue items with triage signals and decision tracking.",
+        "description": "Review queue items with triage insights and decision tracking.",
         "forUserType": "moderator",
         "location": "subreddit",
         "endpoint": "/internal/menu/open-command-center"

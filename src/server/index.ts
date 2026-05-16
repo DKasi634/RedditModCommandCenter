@@ -28,10 +28,21 @@ async function createCommandCenterPost() {
 
   const post = await reddit.submitCustomPost({
     subredditName: context.subredditName,
-    title: "Mod Queue Command Center",
+    title: "Command Center",
     entry: "default",
+    splash: {
+      appDisplayName: "Command Center",
+      heading: "Mod Queue Command Center",
+      description: "Prioritize queue items, review context, and record moderator decisions from one workspace.",
+      buttonLabel: "Open workspace",
+    },
+    styles: {
+      backgroundColor: "#F7F9FAFF",
+      backgroundColorDark: "#101820FF",
+      heightPixels: 512,
+    },
     textFallback: {
-      text: "Open the Mod Queue Command Center.",
+      text: "Open the Mod Queue Command Center moderator workspace.",
     },
   });
 

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import type { SubredditSettings } from "../../shared/domain";
+import { cn } from "../lib/cn";
 import { buttonPrimary, field, muted, panel } from "../lib/ui";
 import { Icon } from "./icon";
 import { UiSelect } from "./ui-select";
@@ -49,7 +50,7 @@ export function SettingsPanel({ settings, isDisabled = false, isEmbedded = false
   }
 
   return (
-    <section className={isEmbedded ? "" : panel}>
+    <section className={isEmbedded ? "" : cn(panel, "max-[640px]:border-0 max-[640px]:bg-transparent max-[640px]:p-0")}>
       {!isEmbedded ? (
         <div className="mb-4 flex items-center justify-between gap-3">
           <h2 className="mb-0 flex items-center gap-2 text-lg font-bold text-[var(--cc-text)]"><Icon name="settings" /> Moderator settings</h2>
@@ -59,8 +60,8 @@ export function SettingsPanel({ settings, isDisabled = false, isEmbedded = false
       <div className="grid grid-cols-5 gap-3 max-[1180px]:grid-cols-2 max-[720px]:grid-cols-1">
         <label className="flex min-h-[74px] items-center justify-between gap-3 rounded-md bg-[var(--cc-subtle)] p-3">
           <span>
-            <strong className="block">Guided review</strong>
-            <small className={muted}>Enable Command Center review signals</small>
+            <strong className="block">Insight check</strong>
+            <small className={muted}>Enable Command Center triage insights</small>
           </span>
           <input
             type="checkbox"

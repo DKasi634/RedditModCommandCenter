@@ -69,7 +69,7 @@ export function DecisionPanel({
   const [secondOpinionReason, setSecondOpinionReason] = useState<SecondOpinionReason>("context_unclear");
   const [isSaving, setIsSaving] = useState(false);
   const isBusy = isDisabled || isSaving;
-  const analyzeLabel = item.classification ? "Rerun review" : "Run guided review";
+  const analyzeLabel = item.classification ? "Reanalyze item" : "Analyze item";
   const isOwnOpenEscalation = item.secondOpinion?.status === "open" &&
     currentModeratorUsername !== undefined &&
     item.secondOpinion.escalatedBy.toLowerCase() === currentModeratorUsername.toLowerCase();
@@ -130,14 +130,14 @@ export function DecisionPanel({
           />
         </label>
         <div>
-          <span className="mb-1 block text-sm font-bold">Guided review</span>
+          <span className="mb-1 block text-sm font-bold">Insight check</span>
           <button className={`${buttonSecondary} h-10 w-full rounded-2xl`} disabled={isBusy || !aiEnabled} onClick={() => void onClassify()}>
             <Icon name="refresh" size={16} className={isAnalyzing ? "animate-spin" : undefined} />
             {isAnalyzing ? "Reviewing..." : analyzeLabel}
           </button>
         </div>
         <label className="text-sm font-bold">
-          Signal feedback
+          Insight feedback
           <UiSelect
             value={aiFeedback}
             disabled={isBusy}
@@ -185,7 +185,7 @@ export function DecisionPanel({
           </div>
         </div>
       ) : null}
-      {!aiEnabled ? <p className={`mt-3 ${muted}`}>Guided review is disabled in settings.</p> : null}
+      {!aiEnabled ? <p className={`mt-3 ${muted}`}>Insight check is disabled in settings.</p> : null}
       {!canEscalate ? (
         <p className={`mt-3 ${muted}`}>No other moderators are available for second opinion.</p>
       ) : null}
