@@ -58,6 +58,11 @@
     "dir": "dist/client",
     "entrypoints": {
       "default": {
+        "inline": true,
+        "entry": "splash.html",
+        "height": "tall"
+      },
+      "command-center": {
         "entry": "index.html",
         "height": "tall"
       }

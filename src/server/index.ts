@@ -21,9 +21,6 @@ import { testGeminiProvider } from "./integrations/ai-backend-client";
 
 const app = new Hono();
 
-const commandCenterIconUri = "command-center-icon.svg";
-const commandCenterBackgroundUri = "command-center-splash.svg";
-
 async function createCommandCenterPost() {
   if (!context.subredditName) {
     throw new Error("No subreddit context is available for this menu action");
@@ -31,16 +28,8 @@ async function createCommandCenterPost() {
 
   const post = await reddit.submitCustomPost({
     subredditName: context.subredditName,
-    title: "Command Center",
+    title: "Mod Queue Command Center",
     entry: "default",
-    splash: {
-      appDisplayName: "Command Center",
-      appIconUri: commandCenterIconUri,
-      backgroundUri: commandCenterBackgroundUri,
-      heading: "Mod Queue Command Center",
-      description: "A focused moderator workspace for queue triage, context checks, second opinions, and decision records.",
-      buttonLabel: "Open workspace",
-    },
     styles: {
       backgroundColor: "#F7F9FAFF",
       backgroundColorDark: "#101820FF",
